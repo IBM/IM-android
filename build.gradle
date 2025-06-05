@@ -1,5 +1,121 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
+import com.electronwill.nightconfig.core.file.FileConfig
+
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.Paths
+import java.nio.file.StandardCopyOption
+
+class BrandingHelper {
+
+    private FileConfig brandingConfig = null
+
+    void init(String rootDir) {
+        def tomlFile = new File("${rootDir}/../branding/branding.toml")
+        println("Reading TOML file ${tomlFile.toString()}")
+        if (!tomlFile.exists()) {
+            throw new GradleException("TOML file does not exist at " + tomlFile.toString())
+        }
+        brandingConfig = FileConfig.of(tomlFile)
+        println("Loading TOML file ${tomlFile.toString()}")
+        brandingConfig.load()
+    }
+
+    void doBranding(String rootDir) {
+        copyGoogleServicesJson(rootDir)
+        copyResourceFiles(rootDir)
+    }
+
+    private void copyGoogleServicesJson(String rootDir) {
+        File source = new File("${rootDir}/../branding/res/android/custom/google-services.json")
+        File target1 = new File("${rootDir}/vector-app/src/gplay/debug/google-services.json")
+        File target2 = new File("${rootDir}/vector-app/src/gplay/release/google-services.json")
+        println("Copy the google-services.json ${source.toString()} ...")
+        if (!source.exists()) {
+            throw new GradleException("GoogleServices file does not exist at " + source)
+        }
+        copyFile(source.toPath(), target1.toPath())
+        copyFile(source.toPath(), target2.toPath())
+    }
+
+    private void copyResourceFiles(String rootDir) {
+        File source1 = new File("${rootDir}/../branding/res/android/custom/library")
+        println("Copy the content of the folder ${source1.toString()} ...")
+        copyDirectory(source1.toPath(), "${rootDir}/library")
+
+        File source2 = new File("${rootDir}/../branding/res/android/custom/vector")
+        println("Copy the content of the folder ${source2.toString()} ...")
+        copyDirectory(source2.toPath(), "${rootDir}/vector")
+
+        File source3 = new File("${rootDir}/../branding/res/android/custom/vector-app")
+        println("Copy the content of the folder ${source3.toString()} ...")
+        copyDirectory(source3.toPath(), "${rootDir}/vector-app")
+    }
+
+    private boolean checkInitiated() {
+        if (brandingConfig == null) {
+            throw new GradleException("Branding configuration is not initiated. Please call the 'init' method first.")
+        }
+    }
+
+    def getConfig(String path) {
+        def config = brandingConfig.get(path)
+        if (config == null) {
+            throw new GradleException("The given path ${path} does not exist in the TOML file.")
+        }
+        return config
+    }
+
+    String getApplicationID() {
+        checkInitiated()
+        return getConfig("settings.mobile.android.app_id")
+    }
+
+    String getVersionName() {
+        return getConfig("settings.version")
+    }
+
+    int getVersionCode() {
+        return getConfig("settings.mobile.android.version_number")
+    }
+
+    private void copyDirectory(Path sourceDir, String destDir) {
+        Files.walk(sourceDir)
+                .forEach(source -> {
+                    source.getFileName()
+
+                    Path destination = Paths.get(
+                            destDir,
+                            source.toString().substring(
+                                    sourceDir.toString().length()
+                            )
+                    )
+                    File destFile = destination.toFile()
+                    if(!destFile.exists()) {
+                        destFile.mkdirs()
+                    }
+
+                    if (!source.toFile().isDirectory()) {
+                        copyFile(source, destination)
+                    }
+                })
+    }
+
+    private void copyFile(Path source, Path dest) {
+        try {
+            println("Copy the file")
+            println("    ${source.toString()}")
+            println("to")
+            println("    ${dest.toString()}")
+            println()
+            Files.copy(source, dest, StandardCopyOption.REPLACE_EXISTING);
+        } catch (Exception e) {
+            throw new GradleException(e.getMessage(), e)
+        }
+    }
+}
+
 buildscript {
     apply from: 'dependencies.gradle'
     apply from: 'dependencies_groups.gradle'
@@ -24,6 +140,7 @@ buildscript {
         classpath libs.gradle.gradlePlugin
         classpath libs.gradle.kotlinPlugin
         classpath libs.gradle.hiltPlugin
+        classpath libs.github.tomlCore
         classpath 'com.google.firebase:firebase-appdistribution-gradle:4.0.0'
         classpath 'com.google.gms:google-services:4.3.15'
         classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:4.0.0.2929'
@@ -67,6 +184,10 @@ dependencyCheck {
 apply from: './tools/gradle/doctor.gradle'
 
 allprojects {
+    ext.brandingHelper = new BrandingHelper()
+    ext.brandingHelper.init(project.rootDir.toString())
+    ext.brandingHelper.doBranding(project.rootDir.toString())
+
     apply plugin: "org.jlleitschuh.gradle.ktlint"
     apply plugin: "io.gitlab.arturbosch.detekt"
 

@@ -198,7 +198,12 @@ class VectorSettingsGeneralFragment :
 
         // Manage 3Pid
         // Hide the preference if 3pids can not be updated
-        mManage3pidsPreference.isVisible = homeServerCapabilities.canChange3pid
+        //BRANDING
+        if (im.vector.app.BuildConfig.SHOW_MAIL_AND_PHONE_SETTINGS) {
+            mManage3pidsPreference.isVisible = homeServerCapabilities.canChange3pid
+        } else {
+            mManage3pidsPreference.isVisible = im.vector.app.BuildConfig.SHOW_MAIL_AND_PHONE_SETTINGS
+        }
 
         val openDiscoveryScreenPreferenceClickListener = Preference.OnPreferenceClickListener {
             (requireActivity() as VectorSettingsActivity).navigateTo(
@@ -319,7 +324,12 @@ class VectorSettingsGeneralFragment :
             false
         }
         // Account deactivation is visible only if account is not managed by an external URL.
-        mDeactivateAccountCategory.isVisible = homeServerCapabilities.delegatedOidcAuthEnabled.not()
+        //BRANDING
+        if (im.vector.app.BuildConfig.SHOW_USER_DEACTIVATION) {
+            mDeactivateAccountCategory.isVisible = homeServerCapabilities.delegatedOidcAuthEnabled.not()
+        } else {
+            mDeactivateAccountCategory.isVisible = im.vector.app.BuildConfig.SHOW_USER_DEACTIVATION
+        }
     }
 
     private suspend fun getCacheSize(): Long = withContext(Dispatchers.IO) {

@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat
 import androidx.media.session.MediaButtonReceiver
 import com.airbnb.mvrx.Mavericks
 import dagger.hilt.android.AndroidEntryPoint
+import im.vector.app.BuildConfig
 import im.vector.app.core.extensions.singletonEntryPoint
 import im.vector.app.core.extensions.startForegroundCompat
 import im.vector.app.features.call.CallArgs
@@ -121,7 +122,12 @@ class CallAndroidService : VectorAndroidService() {
                 displayCallInProgressNotification(intent)
             }
             ACTION_CALL_TERMINATED -> {
-                handleCallTerminated(intent)
+                //BRANDING
+                if(BuildConfig.ENABLE_VOIP_BRANDING) {
+                    handleCallTerminated(intent)
+                } else {
+                    handleUnexpectedState(null)
+                }
             }
             else -> {
                 handleUnexpectedState(null)

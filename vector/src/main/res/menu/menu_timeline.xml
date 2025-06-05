@@ -60,7 +60,7 @@
         android:id="@+id/open_matrix_apps"
         android:title="@string/room_add_matrix_apps"
         app:actionLayout="@layout/custom_action_item_layout_badge"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="@integer/enable_integrations_branding" />
 
     <item
         android:id="@+id/dev_tools"
@@ -90,4 +90,5 @@
         android:title="@string/action_share"
         app:iconTint="?vctr_content_secondary"
         app:showAsAction="withText" />
+
 </menu>

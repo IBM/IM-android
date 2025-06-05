@@ -5,6 +5,7 @@
     <item
         android:id="@+id/menu_room_directory_change_protocol"
         android:title="@string/change_room_directory_network"
-        app:showAsAction="never" />
+        app:showAsAction="never"
+        android:visible="@bool/show_network_dropdown_branding"/>
 
 </menu>

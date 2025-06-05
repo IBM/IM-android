@@ -44,6 +44,10 @@ class AutocompleteCommandPresenter @AssistedInject constructor(
 
     override fun onQuery(query: CharSequence?) {
         val data = Command.values()
+                //BRANDING
+                .filter {
+                    it.brandBoolean
+                }
                 .filter {
                     !it.isDevCommand || vectorPreferences.developerMode()
                 }

@@ -11,6 +11,7 @@ import dagger.Lazy
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import im.vector.app.BuildConfig
 import im.vector.app.core.di.MavericksAssistedViewModelFactory
 import im.vector.app.core.di.hiltMavericksViewModelFactory
 import im.vector.app.core.error.ErrorFormatter
@@ -368,11 +369,13 @@ class MessageActionsViewModel @AssistedInject constructor(
                 add(EventSharedAction.ViewEditHistory(informationData))
             }
 
-            if (canSave(msgType) && messageContent is MessageWithAttachmentContent) {
+            //BRANDING
+            if (canSave(msgType) && messageContent is MessageWithAttachmentContent && im.vector.app.BuildConfig.ENABLE_CONTENT_CAPTURE_BRANDING) {
                 add(EventSharedAction.Save(timelineEvent.eventId, messageContent))
             }
 
-            if (canShare(msgType)) {
+            //BRANDING
+            if (canShare(msgType) && BuildConfig.SHOW_SHARE_ROOM_DIALOG_BRANDING) {
                 add(EventSharedAction.Share(timelineEvent.eventId, messageContent!!))
             }
 
@@ -415,7 +418,8 @@ class MessageActionsViewModel @AssistedInject constructor(
             }
             addViewSourceItems(timelineEvent)
         }
-        add(EventSharedAction.CopyPermalink(eventId))
+        //BRANDING
+        if (BuildConfig.SHOW_SHARE_ROOM_DIALOG_BRANDING) { add(EventSharedAction.CopyPermalink(eventId)) }
         if (session.myUserId != timelineEvent.root.senderId) {
             // not sent by me
             if (timelineEvent.root.isContentReportable()) {

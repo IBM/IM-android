@@ -9,7 +9,8 @@
     android:clickable="true"
     android:focusable="true"
     android:foreground="?attr/selectableItemBackground"
-    tools:viewBindingIgnore="true">
+    tools:viewBindingIgnore="true"
+    android:visibility="@integer/show_spaces_branding">
 
     <Space
         android:id="@+id/indent"

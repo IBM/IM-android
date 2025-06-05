@@ -8,6 +8,7 @@
 package im.vector.app.features.roomprofile
 
 import com.airbnb.epoxy.TypedEpoxyController
+import im.vector.app.BuildConfig
 import im.vector.app.R
 import im.vector.app.core.epoxy.expandableTextItem
 import im.vector.app.core.epoxy.profiles.buildProfileAction
@@ -192,7 +193,8 @@ class RoomProfileController @Inject constructor(
                             host.callback?.openGlobalBlockSettings()
                         }
                     }
-                } else {
+                //BRANDING
+                } else if (BuildConfig.SHOW_SETTINGS_TRUSTED_SOURCES_BRANDING){
                     // per room setting is available
                     val shouldBlockUnverified = data.encryptToVerifiedDeviceOnly.invoke()
                     formSwitchItem {
@@ -257,12 +259,15 @@ class RoomProfileController @Inject constructor(
             )
         }
 
-        buildProfileAction(
-                id = "poll_history",
-                title = stringProvider.getString(CommonStrings.room_profile_section_more_polls),
-                icon = R.drawable.ic_attachment_poll,
-                action = { callback?.onPollHistoryClicked() }
-        )
+        if (im.vector.app.BuildConfig.ENABLE_POLLS_BRANDING) {
+            buildProfileAction(
+                    id = "poll_history",
+                    title = stringProvider.getString(CommonStrings.room_profile_section_more_polls),
+                    icon = R.drawable.ic_attachment_poll,
+                    action = { callback?.onPollHistoryClicked() }
+            )
+        }
+
 
         buildProfileAction(
                 id = "uploads",

@@ -230,6 +230,14 @@ class OnboardingViewModel @AssistedInject constructor(
 
     private fun handleSplashAction(action: OnboardingAction.SplashAction) {
         setState { copy(onboardingFlow = action.onboardingFlow) }
+
+        //BRANDING
+        if (action.onboardingFlow == OnboardingFlow.SignIn) {
+            handleUpdateServerType(OnboardingAction.UpdateServerType(ServerType.MatrixOrg))
+        } else if (action.onboardingFlow == OnboardingFlow.SignUp) {
+            handleUpdateServerType(OnboardingAction.UpdateServerType(ServerType.MatrixOrg))
+        }
+
         continueToPageAfterSplash(action.onboardingFlow)
     }
 

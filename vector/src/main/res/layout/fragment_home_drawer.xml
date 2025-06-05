@@ -89,6 +89,7 @@
             android:padding="0dp"
             android:text="@string/invite_friends"
             android:textAllCaps="false"
+            android:visibility="@integer/show_share_room_dialog_branding"
             app:icon="@drawable/ic_share"
             app:iconGravity="textStart"
             app:iconSize="20dp"

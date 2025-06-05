@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
@@ -41,7 +42,8 @@ class AttachmentTypeSelectorBottomSheet : VectorBaseBottomSheetDialogFragment<Bo
         super.invalidate()
         views.location.isVisible = viewState.isLocationVisible
         views.voiceBroadcast.isVisible = viewState.isVoiceBroadcastVisible
-        views.poll.isVisible = !timelineState.isThreadTimeline()
+        //BRANDING
+        if (im.vector.app.BuildConfig.ENABLE_POLLS_BRANDING) views.poll.isVisible = !timelineState.isThreadTimeline()
         views.textFormatting.isChecked = viewState.isTextFormattingEnabled
         views.textFormatting.setCompoundDrawablesRelativeWithIntrinsicBounds(
                 if (viewState.isTextFormattingEnabled) {

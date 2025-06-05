@@ -484,7 +484,7 @@ class VectorPreferences @Inject constructor(
      * Show all rooms in room directory.
      */
     fun showAllPublicRooms(): Boolean {
-        return defaultPrefs.getBoolean(SETTINGS_ROOM_DIRECTORY_SHOW_ALL_PUBLIC_ROOMS, false)
+        return defaultPrefs.getBoolean(SETTINGS_ROOM_DIRECTORY_SHOW_ALL_PUBLIC_ROOMS, im.vector.app.BuildConfig.SHOW_EXPLICIT_ROOMS_BRANDING)
     }
 
     /**
@@ -775,8 +775,9 @@ class VectorPreferences @Inject constructor(
      *
      * @return true if the read receipts should be shown
      */
+    //BRANDING
     fun showReadReceipts(): Boolean {
-        return defaultPrefs.getBoolean(SETTINGS_SHOW_READ_RECEIPTS_KEY, true)
+        return defaultPrefs.getBoolean(SETTINGS_SHOW_READ_RECEIPTS_KEY, im.vector.app.BuildConfig.ENABLE_READING_CONFIRMATION_BRANDING)
     }
 
     /**
@@ -952,8 +953,12 @@ class VectorPreferences @Inject constructor(
      *
      * @return true if the rage shake is used
      */
+    //BRANDING
     fun useRageshake(): Boolean {
-        return defaultPrefs.getBoolean(SETTINGS_USE_RAGE_SHAKE_KEY, true)
+        if (im.vector.app.BuildConfig.SHOW_SETTINGS_BUG_REPORT_BRANDING) {
+            return defaultPrefs.getBoolean(SETTINGS_USE_RAGE_SHAKE_KEY, true)
+        }
+        return false
     }
 
     /**
@@ -1218,8 +1223,9 @@ class VectorPreferences @Inject constructor(
     /**
      * Indicates whether or not new session manager screens are enabled.
      */
+    //BRANDING
     fun isNewSessionManagerEnabled(): Boolean {
-        return defaultPrefs.getBoolean(SETTINGS_LABS_NEW_SESSION_MANAGER_KEY, getDefault(im.vector.app.config.R.bool.settings_labs_new_session_manager_default))
+        return im.vector.app.BuildConfig.ENABLE_NEW_SESSION_MANAGER_VIEW_BRANDING
     }
 
     /**
@@ -1241,19 +1247,15 @@ class VectorPreferences @Inject constructor(
         )
     }
 
+    //BRANDING
     fun isRichTextEditorEnabled(): Boolean {
-        return defaultPrefs.getBoolean(
-                SETTINGS_LABS_RICH_TEXT_EDITOR_KEY,
-                getDefault(im.vector.app.config.R.bool.settings_labs_rich_text_editor_default)
-        )
+        return im.vector.app.BuildConfig.ENABLE_RICH_TEXT_EDITOR_BRANDING
     }
 
+    //BRANDING
     fun isVoiceBroadcastEnabled(): Boolean {
         return vectorFeatures.isVoiceBroadcastEnabled() &&
-                defaultPrefs.getBoolean(
-                        SETTINGS_LABS_VOICE_BROADCAST_KEY,
-                        getDefault(im.vector.app.config.R.bool.settings_labs_enable_voice_broadcast_default)
-                )
+                im.vector.app.BuildConfig.ENABLE_VOICE_BROADCAST_BRANDING
     }
 
     fun showIpAddressInSessionManagerScreens(): Boolean {

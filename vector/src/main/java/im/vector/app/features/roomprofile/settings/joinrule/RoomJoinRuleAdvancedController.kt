@@ -8,6 +8,7 @@
 package im.vector.app.features.roomprofile.settings.joinrule
 
 import com.airbnb.epoxy.TypedEpoxyController
+import im.vector.app.BuildConfig
 import im.vector.app.core.resources.ColorProvider
 import im.vector.app.core.resources.StringProvider
 import im.vector.app.core.ui.list.ItemStyle
@@ -69,14 +70,17 @@ class RoomJoinRuleAdvancedController @Inject constructor(
 
         if (choices.firstOrNull { it.rule == RoomJoinRules.RESTRICTED } != null) {
             val restrictedRule = choices.first { it.rule == RoomJoinRules.RESTRICTED }
-            Timber.w("##@@ ${state.updatedAllowList}")
-            spaceJoinRuleItem {
-                id("restricted")
-                avatarRenderer(host.avatarRenderer)
-                needUpgrade(restrictedRule.needUpgrade)
-                selected(state.currentRoomJoinRules == RoomJoinRules.RESTRICTED)
-                restrictedList(state.updatedAllowList)
-                listener { host.interactionListener?.didSelectRule(RoomJoinRules.RESTRICTED) }
+            //BRANDING
+            if (BuildConfig.SHOW_SPACES_BRANDING) {
+                Timber.w("##@@ ${state.updatedAllowList}")
+                spaceJoinRuleItem {
+                    id("restricted")
+                    avatarRenderer(host.avatarRenderer)
+                    needUpgrade(restrictedRule.needUpgrade)
+                    selected(state.currentRoomJoinRules == RoomJoinRules.RESTRICTED)
+                    restrictedList(state.updatedAllowList)
+                    listener { host.interactionListener?.didSelectRule(RoomJoinRules.RESTRICTED) }
+                }
             }
         }
 

@@ -27,6 +27,7 @@ import com.airbnb.mvrx.Mavericks
 import com.airbnb.mvrx.viewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
+import im.vector.app.BuildConfig
 import im.vector.app.R
 import im.vector.app.SpaceStateHandler
 import im.vector.app.core.extensions.hideKeyboard
@@ -583,12 +584,15 @@ class HomeActivity :
         if (vectorUncaughtExceptionHandler.didAppCrash()) {
             vectorUncaughtExceptionHandler.clearAppCrashStatus()
 
-            MaterialAlertDialogBuilder(this)
-                    .setMessage(CommonStrings.send_bug_report_app_crashed)
-                    .setCancelable(false)
-                    .setPositiveButton(CommonStrings.yes) { _, _ -> bugReporter.openBugReportScreen(this) }
-                    .setNegativeButton(CommonStrings.no) { _, _ -> bugReporter.deleteCrashFile() }
-                    .show()
+            //BRANDING
+            if(BuildConfig.SHOW_SETTINGS_BUG_REPORT_BRANDING) {
+                MaterialAlertDialogBuilder(this)
+                        .setMessage(CommonStrings.send_bug_report_app_crashed)
+                        .setCancelable(false)
+                        .setPositiveButton(CommonStrings.yes) { _, _ -> bugReporter.openBugReportScreen(this) }
+                        .setNegativeButton(CommonStrings.no) { _, _ -> bugReporter.deleteCrashFile() }
+                        .show()
+            }
         }
 
         // Force remote backup state update to update the banner if needed

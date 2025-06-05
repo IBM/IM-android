@@ -239,6 +239,7 @@ ext.groups = [
                         'ru.noties',
                         'xerces',
                         'xml-apis',
+                        'com.electronwill.night-config',
                 ]
         ],
 ]

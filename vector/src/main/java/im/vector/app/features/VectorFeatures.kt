@@ -7,6 +7,7 @@
 
 package im.vector.app.features
 
+import im.vector.app.BuildConfig
 import im.vector.app.config.Config
 import im.vector.app.config.OnboardingVariant
 import im.vector.app.features.settings.VectorPreferences
@@ -48,6 +49,7 @@ class DefaultVectorFeatures : VectorFeatures {
     override fun isLocationSharingEnabled() = Config.ENABLE_LOCATION_SHARING
     override fun forceUsageOfOpusEncoder(): Boolean = false
     override fun isNewAppLayoutFeatureEnabled(): Boolean = true
-    override fun isVoiceBroadcastEnabled(): Boolean = true
+    //BRANDING
+    override fun isVoiceBroadcastEnabled(): Boolean = BuildConfig.ENABLE_VOICE_BROADCAST_BRANDING
     override fun isUnverifiedSessionsAlertEnabled(): Boolean = true
 }

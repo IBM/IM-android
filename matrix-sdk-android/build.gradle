@@ -134,6 +134,16 @@ android {
         pickFirsts.add("META-INF/LICENSE-notice.md")
         pickFirsts.add("MANIFEST.MF")
     }
+
+    flavorDimensions.add("brandingDimension")
+    productFlavors {
+        branding {
+            dimension "brandingDimension"
+
+            //238
+            buildConfigField "boolean", "ENABLE_VOIP_BRANDING", "${brandingHelper.getConfig("capabilities.enable_voip")}"
+        }
+    }
 }
 
 static def gitRevision() {

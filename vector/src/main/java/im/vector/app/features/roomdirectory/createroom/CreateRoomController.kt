@@ -173,11 +173,14 @@ class CreateRoomController @Inject constructor(
 //        dividerItem {
 //            id("divider1")
 //        }
-        formAdvancedToggleItem {
-            id("showAdvanced")
-            title(host.stringProvider.getString(if (viewState.showAdvanced) CommonStrings.hide_advanced else CommonStrings.show_advanced))
-            expanded(!viewState.showAdvanced)
-            listener { host.listener?.toggleShowAdvanced() }
+        //BRANDING
+        if (im.vector.app.BuildConfig.SHOW_EXTENDED_ROOM_CONFIG_BRANDING) {
+            formAdvancedToggleItem {
+                id("showAdvanced")
+                title(host.stringProvider.getString(if (viewState.showAdvanced) CommonStrings.hide_advanced else CommonStrings.show_advanced))
+                expanded(!viewState.showAdvanced)
+                listener { host.listener?.toggleShowAdvanced() }
+            }
         }
         if (viewState.showAdvanced) {
             formSwitchItem {

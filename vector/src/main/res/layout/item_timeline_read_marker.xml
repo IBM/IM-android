@@ -24,6 +24,6 @@
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:text="@string/timeline_unread_messages"
-        android:textColor="@color/notification_accent_color" />
+        android:textColor="@color/element_accent_light"/>
 
 </FrameLayout>

@@ -20,6 +20,7 @@ import com.airbnb.mvrx.Uninitialized
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import im.vector.app.BuildConfig
 import im.vector.app.R
 import im.vector.app.SpaceStateHandler
 import im.vector.app.core.di.MavericksAssistedViewModelFactory
@@ -216,7 +217,8 @@ class TimelineViewModel @AssistedInject constructor(
         observePowerLevel()
         setupPreviewUrlObservers()
         viewModelScope.launch(Dispatchers.IO) {
-            tryOrNull { room.readService().markAsRead(ReadService.MarkAsReadParams.READ_RECEIPT, mainTimeLineOnly = true) }
+            //BRANDING
+            tryOrNull { room.readService().markAsRead(ReadService.MarkAsReadParams.READ_RECEIPT, mainTimeLineOnly = true, brandingSendReadMarker = vectorPreferences.showReadReceipts()) }
         }
         // Inform the SDK that the room is displayed
         viewModelScope.launch(Dispatchers.IO) {
@@ -829,8 +831,8 @@ class TimelineViewModel @AssistedInject constructor(
             initialState.isThreadTimeline() -> {
                 when (itemId) {
                     R.id.menu_thread_timeline_view_in_room,
-                    R.id.menu_thread_timeline_copy_link,
-                    R.id.menu_thread_timeline_share -> true
+                    R.id.menu_thread_timeline_copy_link -> true
+                    R.id.menu_thread_timeline_share -> BuildConfig.SHOW_SHARE_ROOM_DIALOG_BRANDING
                     else -> false
                 }
             }
@@ -838,9 +840,10 @@ class TimelineViewModel @AssistedInject constructor(
                 when (itemId) {
                     R.id.timeline_setting -> true
                     R.id.invite -> state.canInvite
-                    R.id.open_matrix_apps -> true
-                    R.id.voice_call -> state.isCallOptionAvailable() || state.hasActiveElementCallWidget()
-                    R.id.video_call -> state.isCallOptionAvailable() || state.jitsiState.confId == null || state.jitsiState.hasJoined
+                    //BRANDING
+                    R.id.open_matrix_apps -> BuildConfig.ENABLE_INTEGRATIONS_BRANDING
+                    R.id.voice_call -> if(!BuildConfig.ENABLE_VOIP_BRANDING) { false } else { state.isCallOptionAvailable() || state.hasActiveElementCallWidget() }
+                    R.id.video_call -> if(!BuildConfig.ENABLE_VOIP_BRANDING) { false } else { state.isCallOptionAvailable() || state.jitsiState.confId == null || state.jitsiState.hasJoined }
                     // Show Join conference button only if there is an active conf id not joined. Otherwise fallback to default video disabled. ^
                     R.id.join_conference -> !state.isCallOptionAvailable() && state.jitsiState.confId != null && !state.jitsiState.hasJoined
                     R.id.search -> state.isSearchAvailable()
@@ -1116,7 +1119,8 @@ class TimelineViewModel @AssistedInject constructor(
                     bufferedMostRecentDisplayedEvent.root.eventId?.let { eventId ->
                         session.coroutineScope.launch {
                             val threadId = initialState.rootThreadEventId ?: ReadService.THREAD_ID_MAIN
-                            tryOrNull { room.readService().setReadReceipt(eventId, threadId = threadId) }
+                            //BRANDING
+                            tryOrNull { room.readService().setReadReceipt(eventId, threadId = threadId, brandingSendReadMarker = vectorPreferences.showReadReceipts()) }
                         }
                     }
                 }
@@ -1134,7 +1138,8 @@ class TimelineViewModel @AssistedInject constructor(
         if (room == null) return
         setState { copy(unreadState = UnreadState.HasNoUnread) }
         viewModelScope.launch {
-            tryOrNull { room.readService().markAsRead(ReadService.MarkAsReadParams.BOTH, mainTimeLineOnly = true) }
+            //BRANDING
+            tryOrNull { room.readService().markAsRead(ReadService.MarkAsReadParams.BOTH, mainTimeLineOnly = true, brandingSendReadMarker = vectorPreferences.showReadReceipts()) }
         }
     }
 

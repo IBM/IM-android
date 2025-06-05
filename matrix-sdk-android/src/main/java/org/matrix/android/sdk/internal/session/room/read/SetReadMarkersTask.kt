@@ -51,6 +51,8 @@ internal interface SetReadMarkersTask : Task<SetReadMarkersTask.Params, Unit> {
             val readReceiptThreadId: String? = null,
             val forceReadReceipt: Boolean = false,
             val forceReadMarker: Boolean = false,
+            //BRANDING
+            val brandingSendReadMarker: Boolean = false,
     )
 }
 
@@ -110,18 +112,21 @@ internal class DefaultSetReadMarkersTask @Inject constructor(
             updateDatabase(params.roomId, readReceiptThreadId, markers, shouldUpdateRoomSummary)
         }
         if (markers.isNotEmpty()) {
-            executeRequest(
-                    globalErrorReceiver,
-                    canRetry = true
-            ) {
-                if (markers[READ_MARKER] == null) {
-                    if (readReceiptEventId != null) {
-                        val readBody = ReadBody(threadId = params.readReceiptThreadId)
-                        roomAPI.sendReceipt(params.roomId, READ_RECEIPT, readReceiptEventId, readBody)
+            //BRANDING
+            if (params.brandingSendReadMarker) {
+                executeRequest(
+                        globalErrorReceiver,
+                        canRetry = true
+                ) {
+                    if (markers[READ_MARKER] == null) {
+                        if (readReceiptEventId != null) {
+                            val readBody = ReadBody(threadId = params.readReceiptThreadId)
+                            roomAPI.sendReceipt(params.roomId, READ_RECEIPT, readReceiptEventId, readBody)
+                        }
+                    } else {
+                        // "m.fully_read" value is mandatory to make this call
+                        roomAPI.sendReadMarker(params.roomId, markers)
                     }
-                } else {
-                    // "m.fully_read" value is mandatory to make this call
-                    roomAPI.sendReadMarker(params.roomId, markers)
                 }
             }
         }

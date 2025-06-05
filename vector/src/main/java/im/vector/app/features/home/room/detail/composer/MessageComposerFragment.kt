@@ -363,8 +363,9 @@ class MessageComposerFragment : VectorBaseFragment<FragmentComposerBinding>(), A
                                 AttachmentType.LOCATION,
                                 vectorFeatures.isLocationSharingEnabled(),
                         )
+                        //BRANDING
                         attachmentTypeSelector.setAttachmentVisibility(
-                                AttachmentType.POLL, !isThreadTimeLine()
+                                AttachmentType.POLL, if (im.vector.app.BuildConfig.ENABLE_POLLS_BRANDING) !isThreadTimeLine() else false
                         )
                         attachmentTypeSelector.setAttachmentVisibility(
                                 AttachmentType.VOICE_BROADCAST,

@@ -6,6 +6,7 @@
  */
 package im.vector.app.features.home.room.detail.timeline.factory
 
+import im.vector.app.BuildConfig
 import im.vector.app.core.epoxy.VectorEpoxyModel
 import im.vector.app.core.resources.UserPreferencesProvider
 import im.vector.app.features.home.room.detail.timeline.MessageColorProvider
@@ -80,36 +81,44 @@ class CallItemFactory @Inject constructor(
                 }
             }
             EventType.CALL_REJECT -> {
-                createCallTileTimelineItem(
-                        roomSummary = roomSummary,
-                        callId = callEventGrouper.callId,
-                        callStatus = CallTileTimelineItem.CallStatus.REJECTED,
-                        callKind = callKind,
-                        callback = params.callback,
-                        highlight = params.isHighlighted,
-                        informationData = informationData,
-                        isStillActive = false,
-                        formattedDuration = callEventGrouper.formattedDuration(),
-                        reactionsSummaryEvents = params.reactionsSummaryEvents
-                )
+                if(BuildConfig.ENABLE_VOIP_BRANDING) {
+                    createCallTileTimelineItem(
+                            roomSummary = roomSummary,
+                            callId = callEventGrouper.callId,
+                            callStatus = CallTileTimelineItem.CallStatus.REJECTED,
+                            callKind = callKind,
+                            callback = params.callback,
+                            highlight = params.isHighlighted,
+                            informationData = informationData,
+                            isStillActive = false,
+                            formattedDuration = callEventGrouper.formattedDuration(),
+                            reactionsSummaryEvents = params.reactionsSummaryEvents
+                    )
+                } else {
+                    null
+                }
             }
             EventType.CALL_HANGUP -> {
-                createCallTileTimelineItem(
-                        roomSummary = roomSummary,
-                        callId = callEventGrouper.callId,
-                        callStatus = if (callEventGrouper.callWasAnswered()) {
-                            CallTileTimelineItem.CallStatus.ENDED
-                        } else {
-                            CallTileTimelineItem.CallStatus.MISSED
-                        },
-                        callKind = callKind,
-                        callback = params.callback,
-                        highlight = params.isHighlighted,
-                        informationData = informationData,
-                        isStillActive = false,
-                        formattedDuration = callEventGrouper.formattedDuration(),
-                        reactionsSummaryEvents = params.reactionsSummaryEvents
-                )
+                if(BuildConfig.ENABLE_VOIP_BRANDING) {
+                    createCallTileTimelineItem(
+                            roomSummary = roomSummary,
+                            callId = callEventGrouper.callId,
+                            callStatus = if (callEventGrouper.callWasAnswered()) {
+                                CallTileTimelineItem.CallStatus.ENDED
+                            } else {
+                                CallTileTimelineItem.CallStatus.MISSED
+                            },
+                            callKind = callKind,
+                            callback = params.callback,
+                            highlight = params.isHighlighted,
+                            informationData = informationData,
+                            isStillActive = false,
+                            formattedDuration = callEventGrouper.formattedDuration(),
+                            reactionsSummaryEvents = params.reactionsSummaryEvents
+                    )
+                } else {
+                    null
+                }
             }
             else -> null
         }

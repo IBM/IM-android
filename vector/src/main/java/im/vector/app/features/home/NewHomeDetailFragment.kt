@@ -21,6 +21,7 @@ import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.google.android.material.appbar.AppBarLayout
 import dagger.hilt.android.AndroidEntryPoint
+import im.vector.app.BuildConfig
 import im.vector.app.R
 import im.vector.app.SpaceStateHandler
 import im.vector.app.core.extensions.commitTransaction
@@ -214,7 +215,10 @@ class NewHomeDetailFragment :
 
     private fun showFABs() {
         views.newLayoutCreateChatButton.show()
-        views.newLayoutOpenSpacesButton.show()
+        //BRANDING
+        if (BuildConfig.SHOW_SPACES_BRANDING) {
+            views.newLayoutOpenSpacesButton.show()
+        }
     }
 
     private fun setCurrentSpace(spaceId: String?) {

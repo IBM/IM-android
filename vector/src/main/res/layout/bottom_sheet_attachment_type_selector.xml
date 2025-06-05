@@ -27,7 +27,8 @@
             app:actionTitle="@string/attachment_type_selector_sticker"
             app:leftIcon="@drawable/ic_attachment_sticker"
             app:tint="?colorPrimary"
-            app:titleTextColor="?vctr_content_primary" />
+            app:titleTextColor="?vctr_content_primary"
+            android:visibility="@integer/show_sticker_button_branding" />
 
         <im.vector.app.core.ui.views.BottomSheetActionButton
             android:id="@+id/file"
@@ -81,7 +82,8 @@
             app:actionTitle="@string/attachment_type_selector_contact"
             app:leftIcon="@drawable/ic_attachment_contact_white_24dp"
             app:tint="?colorPrimary"
-            app:titleTextColor="?vctr_content_primary" />
+            app:titleTextColor="?vctr_content_primary"
+            android:visibility="@integer/enable_phone_contact_access_branding"/>
 
         <View
             android:layout_width="match_parent"

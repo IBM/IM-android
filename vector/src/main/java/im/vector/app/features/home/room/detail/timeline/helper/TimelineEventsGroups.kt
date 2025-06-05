@@ -7,6 +7,7 @@
 
 package im.vector.app.features.home.room.detail.timeline.helper
 
+import im.vector.app.BuildConfig
 import im.vector.app.core.utils.TextUtils
 import im.vector.app.features.voicebroadcast.VoiceBroadcastConstants
 import im.vector.app.features.voicebroadcast.duration
@@ -98,11 +99,21 @@ class CallSignalingEventsGroup(private val group: TimelineEventsGroup) {
     }
 
     fun isRinging(): Boolean {
-        return getAnswer() == null && getHangup() == null && getReject() == null
+        //BRANDING
+        return if (BuildConfig.ENABLE_VOIP_BRANDING) {
+            getAnswer() == null && getHangup() == null && getReject() == null
+        } else {
+            false
+        }
     }
 
     fun isInCall(): Boolean {
-        return getHangup() == null && getReject() == null
+        //BRANDING
+        return if (BuildConfig.ENABLE_VOIP_BRANDING) {
+            getHangup() == null && getReject() == null
+        } else {
+            false
+        }
     }
 
     fun formattedDuration(): String {

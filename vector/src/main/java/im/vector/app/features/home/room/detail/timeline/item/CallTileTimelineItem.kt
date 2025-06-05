@@ -19,6 +19,7 @@ import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import com.airbnb.epoxy.EpoxyAttribute
 import com.airbnb.epoxy.EpoxyModelClass
+import im.vector.app.BuildConfig
 import im.vector.app.R
 import im.vector.app.core.epoxy.ClickListener
 import im.vector.app.core.epoxy.onClick
@@ -52,11 +53,12 @@ abstract class CallTileTimelineItem : AbsBaseMessageItem<CallTileTimelineItem.Ho
         holder.creatorNameView.text = attributes.userOfInterest.getBestName()
         attributes.avatarRenderer.render(attributes.userOfInterest, holder.creatorAvatarView)
         when (attributes.callStatus) {
-            CallStatus.INVITED -> renderInvitedStatus(holder)
-            CallStatus.IN_CALL -> renderInCallStatus(holder)
-            CallStatus.REJECTED -> renderRejectedStatus(holder)
-            CallStatus.ENDED -> renderEndedStatus(holder)
-            CallStatus.MISSED -> renderMissedStatus(holder)
+            //BRANDING
+            CallStatus.INVITED -> if(BuildConfig.ENABLE_VOIP_BRANDING) { renderInvitedStatus(holder) }
+            CallStatus.IN_CALL -> if(BuildConfig.ENABLE_VOIP_BRANDING) { renderInCallStatus(holder) }
+            CallStatus.REJECTED -> if(BuildConfig.ENABLE_VOIP_BRANDING) { renderRejectedStatus(holder) }
+            CallStatus.ENDED -> if(BuildConfig.ENABLE_VOIP_BRANDING) { renderEndedStatus(holder) }
+            CallStatus.MISSED -> if(BuildConfig.ENABLE_VOIP_BRANDING) { renderMissedStatus(holder) }
         }
         renderSendState(holder.view, null, holder.failedToSendIndicator)
     }

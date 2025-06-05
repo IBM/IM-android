@@ -222,6 +222,10 @@ android {
 //        execution 'ANDROIDX_TEST_ORCHESTRATOR'
     }
 
+    buildFeatures {
+        buildConfig true
+    }
+
     signingConfigs {
         debug {
             keyAlias 'androiddebugkey'
@@ -377,6 +381,254 @@ android {
         pickFirsts.add("META-INF/LICENSE.md")
         pickFirsts.add("META-INF/LICENSE-notice.md")
         pickFirsts.add("MANIFEST.MF")
+    }
+
+    //BRANDING
+    def appID = brandingHelper.getApplicationID()
+    println("applicationID: ${appID}")
+    def verCode = brandingHelper.getVersionCode()
+    println("versionCode: ${verCode}")
+    def verName = brandingHelper.getVersionName()
+    println("versionName: ${verName}")
+    println()
+    
+    buildFeatures {
+        buildConfig true
+    }
+
+    flavorDimensions.add("brandingDimension")
+    productFlavors {
+        branding {
+            dimension "brandingDimension"
+            applicationId appID
+            versionCode verCode
+            versionName verName
+
+            //colors light
+            resValue "color", "element_accent_light", "#" + brandingHelper.getConfig("colors.light.accent_color")
+            resValue "color", "element_alert_light", "#" + brandingHelper.getConfig("colors.light.alert_color")
+            resValue "color", "element_content_primary_light", "#" + brandingHelper.getConfig("colors.light.text_primary_color")
+            resValue "color", "element_content_secondary_light", "#" + brandingHelper.getConfig("colors.light.text_secondary_color")
+            resValue "color", "element_background_light", "#" + brandingHelper.getConfig("colors.light.background_primary_color")
+            resValue "color", "bottom_sheet_attachment_switch_light_branding", "#" + brandingHelper.getConfig("colors.light.accent_color")
+
+            //colors dark
+            resValue "color", "element_accent_dark", "#" + brandingHelper.getConfig("colors.dark.accent_color")
+            resValue "color", "element_alert_dark", "#" + brandingHelper.getConfig("colors.dark.alert_color")
+            resValue "color", "element_content_primary_dark", "#" + brandingHelper.getConfig("colors.dark.text_primary_color")
+            resValue "color", "element_content_secondary_dark", "#" + brandingHelper.getConfig("colors.dark.text_secondary_color")
+            resValue "color", "element_background_dark", "#" + brandingHelper.getConfig("colors.dark.background_primary_color")
+            resValue "color", "bottom_sheet_attachment_switch_dark_branding", "#" + brandingHelper.getConfig("colors.dark.accent_color")
+
+            //colors other
+            resValue "color", "element_name_01", "#" + brandingHelper.getConfig("colors.avatar_colors")[0]
+            resValue "color", "element_name_02", "#" + brandingHelper.getConfig("colors.avatar_colors")[1]
+            resValue "color", "element_name_03", "#" + brandingHelper.getConfig("colors.avatar_colors")[2]
+            resValue "color", "element_name_04", "#" + brandingHelper.getConfig("colors.avatar_colors")[3]
+            resValue "color", "element_name_05", "#" + brandingHelper.getConfig("colors.avatar_colors")[4]
+            resValue "color", "element_name_06", "#" + brandingHelper.getConfig("colors.avatar_colors")[5]
+
+            //strings-de
+            resValue "string", "login_server_matrix_org_text_de", brandingHelper.getConfig("strings.android.de.login_server_matrix_org_text")
+            resValue "string", "ftue_auth_carousel_control_title_de", brandingHelper.getConfig("strings.android.de.ftue_auth_carousel_control_title")
+            resValue "string", "login_splash_already_have_account_de", brandingHelper.getConfig("strings.android.de.login_splash_already_have_account")
+            resValue "string", "ftue_auth_carousel_encrypted_title_de", brandingHelper.getConfig("strings.android.de.ftue_auth_carousel_encrypted_title")
+            resValue "string", "ftue_auth_carousel_secure_title_de", brandingHelper.getConfig("strings.android.de.ftue_auth_carousel_secure_title")
+            resValue "string", "ftue_auth_carousel_workplace_title_de", brandingHelper.getConfig("strings.android.de.ftue_auth_carousel_workplace_title")
+            resValue "string", "ftue_auth_carousel_workplace_body_de", brandingHelper.getConfig("strings.android.de.ftue_auth_carousel_workplace_body")
+            resValue "string", "ftue_auth_carousel_encrypted_body_de", brandingHelper.getConfig("strings.android.de.ftue_auth_carousel_encrypted_body")
+            resValue "string", "ftue_auth_carousel_control_body_de", brandingHelper.getConfig("strings.android.de.ftue_auth_carousel_control_body")
+            resValue "string", "ftue_auth_carousel_secure_body_de", brandingHelper.getConfig("strings.android.de.ftue_auth_carousel_secure_body")
+
+            //string-en
+            resValue "string", "login_server_matrix_org_text_en", brandingHelper.getConfig("strings.android.en.login_server_matrix_org_text")
+            resValue "string", "ftue_auth_carousel_control_title_en", brandingHelper.getConfig("strings.android.en.ftue_auth_carousel_control_title")
+            resValue "string", "login_splash_already_have_account_en", brandingHelper.getConfig("strings.android.en.login_splash_already_have_account")
+            resValue "string", "ftue_auth_carousel_encrypted_title_en", brandingHelper.getConfig("strings.android.en.ftue_auth_carousel_encrypted_title")
+            resValue "string", "ftue_auth_carousel_secure_title_en", brandingHelper.getConfig("strings.android.en.ftue_auth_carousel_secure_title")
+            resValue "string", "ftue_auth_carousel_workplace_title_en", brandingHelper.getConfig("strings.android.en.ftue_auth_carousel_workplace_title")
+            resValue "string", "ftue_auth_carousel_workplace_body_en", brandingHelper.getConfig("strings.android.en.ftue_auth_carousel_workplace_body")
+            resValue "string", "ftue_auth_carousel_encrypted_body_en", brandingHelper.getConfig("strings.android.en.ftue_auth_carousel_encrypted_body")
+            resValue "string", "ftue_auth_carousel_control_body_en", brandingHelper.getConfig("strings.android.en.ftue_auth_carousel_control_body")
+            resValue "string", "ftue_auth_carousel_secure_body_en", brandingHelper.getConfig("strings.android.en.ftue_auth_carousel_secure_body")
+
+            //server configs
+            resValue "string", "matrix_org_server_url", "\"${brandingHelper.getConfig("connectivity.server")}\""
+            resValue "string", "pusher_app_id", brandingHelper.getConfig("settings.mobile.android.app_id") + ".android"
+            resValue "string", "pusher_http_url", brandingHelper.getConfig("settings.mobile.sygnal_url")
+
+            //193
+            if (brandingHelper.getConfig("capabilities.show_settings_labor")) {
+                resValue "integer", "settings_root_labs_visible_branding", "1"
+            } else {
+                resValue "integer", "settings_root_labs_visible_branding", "0"
+            }
+
+            //229
+            if (brandingHelper.getConfig("capabilities.show_share_room_dialog")) {
+                resValue "integer", "show_share_room_dialog_branding", "0"
+            } else {
+                resValue "integer", "show_share_room_dialog_branding", "2"
+            }
+
+            resValue "bool", "show_share_room_icon_branding", "${brandingHelper.getConfig("capabilities.show_share_room_dialog")}"
+
+            if (brandingHelper.getConfig("capabilities.show_share_room_dialog")) {
+                resValue "integer", "show_invite_messenger_branding", "1"
+            } else {
+                resValue "integer", "show_invite_messenger_branding", "0"
+            }
+
+            //263
+            if (brandingHelper.getConfig("capabilities.show_spaces")) {
+                resValue "integer", "show_spaces_branding", "0"
+            } else {
+                resValue "integer", "show_spaces_branding", "2"
+            }
+
+            if (brandingHelper.getConfig("capabilities.show_spaces")) {
+                resValue "integer", "show_spaces_bool_branding", "1"
+            } else {
+                resValue "integer", "show_spaces_bool_branding", "0"
+            }
+
+            //197
+            resValue "bool", "default_show_account_event", "${brandingHelper.getConfig("capabilities.show_member_updates_in_rooms")}"
+            resValue "bool", "show_pref_account_event", "${brandingHelper.getConfig("capabilities.show_member_updates_in_rooms")}"
+            resValue "bool", "default_show_join_leave_event", "${brandingHelper.getConfig("capabilities.show_member_updates_in_rooms")}"
+            resValue "bool", "show_pref_join_leave_event", "${brandingHelper.getConfig("capabilities.show_member_updates_in_rooms")}"
+
+            resValue "bool", "settings_root_voice_video_visible", "${brandingHelper.getConfig("capabilities.enable_voip")}"
+
+            if (brandingHelper.getConfig("capabilities.enable_integrations")) {
+                resValue "integer", "enable_integrations_branding", "1"
+            } else {
+                resValue "integer", "enable_integrations_branding", "0"
+            }
+
+            //256
+            if (brandingHelper.getConfig("capabilities.show_settings_advanced")) {
+                resValue "integer", "show_settings_advanced_branding", "1"
+            } else {
+                resValue "integer", "show_settings_advanced_branding", "0"
+            }
+            resValue "bool", "settings_root_advanced_visible", "${brandingHelper.getConfig("capabilities.show_settings_advanced")}"
+
+            //204&208
+            if (brandingHelper.getConfig("capabilities.enable_setting_email") || brandingHelper.getConfig("capabilities.enable_setting_phone_number")) {
+                resValue "integer", "enable_setting_email_or_phone_number_branding", "1"
+            } else {
+                resValue "integer", "enable_setting_email_or_phone_number_branding", "0"
+            }
+            if (brandingHelper.getConfig("capabilities.enable_setting_email")) {
+                resValue "integer", "enable_setting_email_branding", "1"
+            } else {
+                resValue "integer", "enable_setting_email_branding", "0"
+            }
+            if (brandingHelper.getConfig("capabilities.enable_setting_phone_number")) {
+                resValue "integer", "enable_setting_phone_number_branding", "1"
+            } else {
+                resValue "integer", "enable_setting_phone_number_branding", "0"
+            }
+
+            //212
+            if (brandingHelper.getConfig("capabilities.show_settings_identity_server")) {
+                resValue "integer", "show_settings_identity_server_branding", "1"
+            } else {
+                resValue "integer", "show_settings_identity_server_branding", "0"
+            }
+
+            //193
+            resValue "bool", "settings_root_labs_visible_branding", "${brandingHelper.getConfig("capabilities.show_settings_labor")}"
+
+            //259
+            if (brandingHelper.getConfig("capabilities.show_settings_trusted_sources")) {
+                resValue "integer", "show_settings_trusted_sources_branding", "1"
+            } else {
+                resValue "integer", "show_settings_trusted_sources_branding", "0"
+            }
+
+            //223
+            if (brandingHelper.getConfig("capabilities.show_settings_bug_report")) {
+                resValue "integer", "show_settings_bug_report_branding", "1"
+            } else {
+                resValue "integer", "show_settings_bug_report_branding", "0"
+            }
+
+            //267
+            if (brandingHelper.getConfig("capabilities.show_sticker_button")) {
+                resValue "integer", "show_sticker_button_branding", "0"
+            } else {
+                resValue "integer", "show_sticker_button_branding", "2"
+            }
+
+            //271
+            resValue "bool", "show_pref_dev_mode", "${brandingHelper.getConfig("capabilities.android.show_developer_mode")}"
+
+            if (brandingHelper.getConfig("capabilities.enable_phone_contact_access")) {
+                resValue "integer", "enable_phone_contact_access_branding", "0"
+            } else {
+                resValue "integer", "enable_phone_contact_access_branding", "2"
+            }
+
+            //216 & 657
+            if (!brandingHelper.getConfig("capabilities.show_settings_timeline") && brandingHelper.getConfig("capabilities.show_reading_confirmation")) {
+                resValue "bool", "show_pref_category_timeline_branding", "true"
+                resValue "bool", "show_pref_category_timeline_elements_branding", "${brandingHelper.getConfig("capabilities.show_settings_timeline")}"
+                resValue "bool", "show_reading_confirmation_branding", "${brandingHelper.getConfig("capabilities.show_reading_confirmation")}"
+            } else {
+                resValue "bool", "show_pref_category_timeline_branding", "${brandingHelper.getConfig("capabilities.show_settings_timeline")}"
+                resValue "bool", "show_pref_category_timeline_elements_branding", "${brandingHelper.getConfig("capabilities.show_settings_timeline")}"
+            }
+
+            //349
+            resValue "bool", "show_network_dropdown_branding", "${brandingHelper.getConfig("capabilities.show_network_dropdown")}"
+
+            //477
+            resValue "bool", "enable_voice_broadcast_branding", "${brandingHelper.getConfig("capabilities.enable_voice_broadcasts")}"
+
+            //490
+            resValue "bool", "show_explicit_rooms_branding", "${brandingHelper.getConfig("capabilities.show_explicit_rooms")}"
+
+            //499
+            resValue "bool", "enable_rich_text_editor_branding", "true"
+
+            //500
+            resValue "bool", "enable_new_session_manager_view_branding", "true"
+
+            //657 & 867
+            resValue "bool", "show_reading_confirmation_branding", "${brandingHelper.getConfig("capabilities.show_reading_confirmation")}"
+            resValue "bool", "enable_reading_confirmation_branding", "${brandingHelper.getConfig("capabilities.enable_reading_confirmation")}"
+
+            //999 [POC]
+            resValue "bool", "enable_content_capture_branding", "${brandingHelper.getConfig("capabilities.android.enable_content_capture")}"
+            if (brandingHelper.getConfig("capabilities.android.enable_content_capture")) {
+                resValue "integer", "enable_content_capture_branding", "0"
+            } else {
+                resValue "integer", "enable_content_capture_branding", "2"
+            }
+
+        }
+    }
+
+    buildTypes {
+        debug {
+            applicationIdSuffix ""
+            resValue "string", "app_name", brandingHelper.getConfig("settings.display_name")
+        }
+        release {
+            applicationIdSuffix ""
+            resValue "string", "app_name", brandingHelper.getConfig("settings.display_name")
+        }
+    }
+
+    defaultConfig {
+        applicationVariants.all { variant ->
+            variant.outputs.each { output ->
+                output.versionCodeOverride = verCode
+                output.versionNameOverride = verName
+            }
+        }
     }
 }
 

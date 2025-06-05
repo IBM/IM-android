@@ -172,7 +172,8 @@ class LoginFragment :
             when (state.serverType) {
                 ServerType.MatrixOrg -> {
                     views.loginServerIcon.isVisible = true
-                    views.loginServerIcon.setImageResource(R.drawable.ic_logo_matrix_org)
+                    //BRANDING
+                    views.loginServerIcon.setImageResource(im.vector.lib.ui.styles.R.drawable.element_splash)
                     views.loginTitle.text = getString(resId, state.homeServerUrlFromUser.toReducedUrl())
                     views.loginNotice.text = getString(CommonStrings.login_server_matrix_org_text)
                 }

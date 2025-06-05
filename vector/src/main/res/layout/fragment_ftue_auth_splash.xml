@@ -37,7 +37,7 @@
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:importantForAccessibility="no"
-            android:src="@drawable/element_logo_green"
+            android:src="@mipmap/ic_launcher"
             android:transitionName="loginLogoTransition" />
 
         <ImageView
@@ -188,7 +188,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/loginSplashSpace4"
-        tools:text="@string/login_splash_create_account" />
+        tools:text="@string/login_splash_create_account"
+        android:visibility="gone"/>
 
     <Button
         android:id="@+id/loginSplashAlreadyHaveAccount"

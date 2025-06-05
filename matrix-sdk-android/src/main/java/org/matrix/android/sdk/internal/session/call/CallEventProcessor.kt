@@ -17,6 +17,7 @@
 package org.matrix.android.sdk.internal.session.call
 
 import io.realm.Realm
+import org.matrix.android.sdk.BuildConfig
 import org.matrix.android.sdk.api.logger.LoggerTag
 import org.matrix.android.sdk.api.session.events.model.Event
 import org.matrix.android.sdk.api.session.events.model.EventType
@@ -30,7 +31,7 @@ private val loggerTag = LoggerTag("CallEventProcessor", LoggerTag.VOIP)
 
 @SessionScope
 internal class CallEventProcessor @Inject constructor(private val callSignalingHandler: CallSignalingHandler) :
-        EventInsertLiveProcessor {
+    EventInsertLiveProcessor {
 
     private val allowedTypes = listOf(
             EventType.CALL_ANSWER,
@@ -50,7 +51,12 @@ internal class CallEventProcessor @Inject constructor(private val callSignalingH
         if (insertType != EventInsertType.INCREMENTAL_SYNC) {
             return false
         }
-        return allowedTypes.contains(eventType)
+        //BRANDING
+        if(BuildConfig.ENABLE_VOIP_BRANDING) {
+            return allowedTypes.contains(eventType)
+        } else {
+            return false
+        }
     }
 
     override fun process(realm: Realm, event: Event) {

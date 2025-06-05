@@ -209,6 +209,10 @@ abstract class VectorBaseActivity<VB : ViewBinding> : AppCompatActivity(), Maver
         ThemeUtils.setActivityTheme(this, getOtherThemes())
         viewModelFactory = activityEntryPoint.viewModelFactory()
         super.onCreate(savedInstanceState)
+        //BRANDING
+        if (!im.vector.app.BuildConfig.ENABLE_CONTENT_CAPTURE_BRANDING) {
+            window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+        }
         addOnMultiWindowModeChangedListener(onMultiWindowModeChangedListener)
         setupMenu()
         configurationViewModel = viewModelProvider.get(ConfigurationViewModel::class.java)

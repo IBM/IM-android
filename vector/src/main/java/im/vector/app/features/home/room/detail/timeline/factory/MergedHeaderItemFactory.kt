@@ -7,6 +7,7 @@
 
 package im.vector.app.features.home.room.detail.timeline.factory
 
+import im.vector.app.BuildConfig
 import im.vector.app.core.di.ActiveSessionHolder
 import im.vector.app.core.extensions.prevOrNull
 import im.vector.app.features.home.AvatarRenderer
@@ -74,7 +75,11 @@ class MergedHeaderItemFactory @Inject constructor(
             isStartOfRoomCreationSummary(event, nextEvent) ->
                 buildRoomCreationMergedSummary(currentPosition, items, partialState, event, eventIdToHighlight, requestModelBuild, callback)
             isStartOfSameTypeEventsSummary(event, nextEvent, addDaySeparator) ->
-                buildSameTypeEventsMergedSummary(currentPosition, items, partialState, event, eventIdToHighlight, requestModelBuild, callback)
+                if (BuildConfig.SHOW_MEMBER_UPDATES_IN_ROOMS_BRANDING) {
+                    buildSameTypeEventsMergedSummary(currentPosition, items, partialState, event, eventIdToHighlight, requestModelBuild, callback)
+                } else {
+                    null
+                }
             isStartOfRedactedEventsSummary(event, items, currentPosition, partialState, addDaySeparator) ->
                 buildRedactedEventsMergedSummary(currentPosition, items, partialState, event, eventIdToHighlight, requestModelBuild, callback)
             else -> null

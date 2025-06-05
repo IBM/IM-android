@@ -112,6 +112,131 @@ android {
         pickFirsts.add("META-INF/LICENSE-notice.md")
         pickFirsts.add("MANIFEST.MF")
     }
+
+    //BRANDING
+    buildFeatures {
+        buildConfig true
+    }
+
+    flavorDimensions.add("brandingDimension")
+    productFlavors {
+        branding {
+            dimension "brandingDimension"
+
+            //193
+            buildConfigField "boolean", "SHOW_SETTINGS_LABOR_BRANDING", "${brandingHelper.getConfig("capabilities.show_settings_labor")}"
+
+            //197
+            buildConfigField "boolean", "SHOW_MEMBER_UPDATES_IN_ROOMS_BRANDING", "${brandingHelper.getConfig("capabilities.show_member_updates_in_rooms")}"
+
+            //208
+            if (brandingHelper.getConfig("capabilities.enable_setting_email") && brandingHelper.getConfig("capabilities.enable_setting_phone_number")) {
+                buildConfigField "boolean", "SHOW_MAIL_AND_PHONE_SETTINGS", "true"
+            } else {
+                buildConfigField "boolean", "SHOW_MAIL_AND_PHONE_SETTINGS", "false"
+            }
+
+            //238
+            buildConfigField "boolean", "ENABLE_VOIP_BRANDING", "${brandingHelper.getConfig("capabilities.enable_voip")}"
+
+            //243
+            buildConfigField "boolean", "ENABLE_INTEGRATIONS_BRANDING", "${brandingHelper.getConfig("capabilities.enable_integrations")}"
+
+            //privacy_url
+            buildConfigField "String", "PRIVACY_URL_BRANDING", "\"${brandingHelper.getConfig("settings.privacy_url")}\""
+
+            //help_url
+            buildConfigField "String", "HELP_URL_BRANDING", "\"${brandingHelper.getConfig("settings.help_url")}\""
+
+            //
+            buildConfigField "Boolean", "ENABLE_PHONE_CONTACT_ACCESS_BRANDING", "${brandingHelper.getConfig("capabilities.enable_phone_contact_access")}"
+
+            //223
+            buildConfigField "Boolean", "SHOW_SETTINGS_BUG_REPORT_BRANDING", "${brandingHelper.getConfig("capabilities.show_settings_bug_report")}"
+
+            //229
+            buildConfigField "Boolean", "SHOW_SHARE_ROOM_DIALOG_BRANDING", "${brandingHelper.getConfig("capabilities.show_share_room_dialog")}"
+
+            //254
+            buildConfigField "Boolean", "SHOW_HELP_ELEMENT_INTRO_BRANDING", "${brandingHelper.getConfig("capabilities.show_help_element_intro")}"
+
+            //212
+            buildConfigField "Boolean", "SHOW_SETTINGS_IDENTITY_SERVER_BRANDING", "${brandingHelper.getConfig("capabilities.show_settings_identity_server")}"
+
+            //259
+            buildConfigField "Boolean", "SHOW_SETTINGS_TRUSTED_SOURCES_BRANDING", "${brandingHelper.getConfig("capabilities.show_settings_trusted_sources")}"
+
+            //263
+            buildConfigField "Boolean", "SHOW_SPACES_BRANDING", "${brandingHelper.getConfig("capabilities.show_spaces")}"
+            buildConfigField "Boolean", "SHOW_EXTENDED_ROOM_CONFIG_BRANDING", "${brandingHelper.getConfig("capabilities.show_extended_room_config")}"
+
+            //352
+            buildConfigField "Boolean", "ENABLE_CMD_TEXTEFFECTS_BRANDING", "${brandingHelper.getConfig("capabilities.enable_cmd_textEffects")}"
+
+            //353
+            buildConfigField "Boolean", "ENABLE_CMD_SELFNICKAVATAR_BRANDING", "${brandingHelper.getConfig("capabilities.enable_cmd_selfNickAvatar")}"
+
+            //354
+            buildConfigField "Boolean", "ENABLE_CMD_ROOMRPROPS_BRANDING", "${brandingHelper.getConfig("capabilities.enable_cmd_roomProps")}"
+
+            //355
+            buildConfigField "Boolean", "ENABLE_CMD_USERMGMT_BRANDING", "${brandingHelper.getConfig("capabilities.enable_cmd_userMgmt")}"
+
+            //356
+            buildConfigField "Boolean", "ENABLE_CMD_JOINLEAVE_BRANDING", "${brandingHelper.getConfig("capabilities.enable_cmd_joinLeave")}"
+
+            //357
+            buildConfigField "Boolean", "ENABLE_CMD_IGNORE_BRANDING", "${brandingHelper.getConfig("capabilities.enable_cmd_ignore")}"
+
+            //358
+            buildConfigField "Boolean", "ENABLE_CMD_SHORTCUTS_BRANDING", "${brandingHelper.getConfig("capabilities.enable_cmd_shortcuts")}"
+
+            //359
+            buildConfigField "Boolean", "ENABLE_CMD_UPGRADEROOM_BRANDING", "${brandingHelper.getConfig("capabilities.enable_cmd_upgradeRoom")}"
+
+            //360
+            buildConfigField "Boolean", "ENABLE_CMD_BAN_BRANDING", "${brandingHelper.getConfig("capabilities.enable_cmd_ban")}"
+
+            //361
+            buildConfigField "Boolean", "ENABLE_CMD_VERIFY_BRANDING", "${brandingHelper.getConfig("capabilities.enable_cmd_verify")}"
+
+            //362
+            buildConfigField "Boolean", "ENABLE_CMD_HELP_BRANDING", "${brandingHelper.getConfig("capabilities.enable_cmd_help")}"
+
+            //363
+            buildConfigField "Boolean", "ENABLE_CMD_CONVERTROOMS_BRANDING", "${brandingHelper.getConfig("capabilities.enable_cmd_convertRooms")}"
+
+            //363
+            buildConfigField "Boolean", "ENABLE_CMD_CONVERTROOMS_BRANDING", "${brandingHelper.getConfig("capabilities.enable_cmd_convertRooms")}"
+
+            //344
+            buildConfigField "Boolean", "ENABLE_CMD_DEVTOOLS_BRANDING", "${brandingHelper.getConfig("capabilities.enable_cmd_devtools")}"
+
+            //377
+            buildConfigField "Boolean", "ENABLE_VOICE_BROADCAST_BRANDING", "${brandingHelper.getConfig("capabilities.enable_voice_broadcasts")}"
+
+            //490
+            buildConfigField "Boolean", "SHOW_EXPLICIT_ROOMS_BRANDING", "${brandingHelper.getConfig("capabilities.show_explicit_rooms")}"
+
+            //500
+            buildConfigField "Boolean", "ENABLE_NEW_SESSION_MANAGER_VIEW_BRANDING", "true"
+
+            //604
+            buildConfigField "Boolean", "ENABLE_POLLS_BRANDING", "${brandingHelper.getConfig("capabilities.enable_polls")}"
+
+            //609
+            buildConfigField "Boolean", "ENABLE_RICH_TEXT_EDITOR_BRANDING", "${brandingHelper.getConfig("capabilities.enable_rich_text_editor")}"
+
+            //867
+            buildConfigField "Boolean", "ENABLE_READING_CONFIRMATION_BRANDING", "${brandingHelper.getConfig("capabilities.enable_reading_confirmation")}"
+
+            //997
+            buildConfigField "Boolean", "SHOW_USER_DEACTIVATION", "${brandingHelper.getConfig("capabilities.show_user_deactivation")}"
+
+            //999 [POC]
+            buildConfigField "Boolean", "ENABLE_CONTENT_CAPTURE_BRANDING", "${brandingHelper.getConfig("capabilities.android.enable_content_capture")}"
+        }
+    }
 }
 
 dependencies {

@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.epoxy.EpoxyController
 import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.epoxy.VisibilityState
+import im.vector.app.BuildConfig
 import im.vector.app.core.date.DateFormatKind
 import im.vector.app.core.date.VectorDateFormatter
 import im.vector.app.core.epoxy.LoadingItem_
@@ -502,7 +503,15 @@ class TimelineEventController @Inject constructor(
         } else {
             null
         }
-        val readReceipts = receiptsByEvents[event.eventId].orEmpty()
+        //BRANDING
+        var readReceipts = receiptsByEvents[event.eventId].orEmpty()
+        if(!BuildConfig.SHOW_MEMBER_UPDATES_IN_ROOMS_BRANDING) {
+            if (event.root.type == EventType.STATE_ROOM_JOIN_RULES || event.root.type == EventType.STATE_ROOM_AVATAR ||
+                    event.root.type == EventType.STATE_ROOM_MEMBER || event.root.type == EventType.STATE_ROOM_THIRD_PARTY_INVITE ||
+                    event.root.type == EventType.STATE_ROOM_POWER_LEVELS) {
+                readReceipts = ArrayList()
+            }
+        }
         return copy(
                 readReceiptsItem = readReceiptsItemFactory.create(
                         event.eventId,

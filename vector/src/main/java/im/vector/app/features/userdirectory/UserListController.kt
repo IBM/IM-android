@@ -12,6 +12,7 @@ import com.airbnb.mvrx.Fail
 import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.Uninitialized
+import im.vector.app.BuildConfig
 import im.vector.app.R
 import im.vector.app.core.epoxy.errorWithRetryItem
 import im.vector.app.core.epoxy.loadingItem
@@ -63,7 +64,8 @@ class UserListController @Inject constructor(
 
         // Build generic items
         if (currentState.searchTerm.isBlank()) {
-            if (currentState.showInviteActions()) {
+            //BRANDING
+            if (BuildConfig.SHOW_SHARE_ROOM_DIALOG_BRANDING && currentState.showInviteActions()) {
                 actionItem {
                     id(R.drawable.ic_share)
                     title(host.stringProvider.getString(CommonStrings.invite_friends))
@@ -73,7 +75,8 @@ class UserListController @Inject constructor(
                     }
                 }
             }
-            if (currentState.showContactBookAction) {
+            //BRANDING
+            if (BuildConfig.ENABLE_PHONE_CONTACT_ACCESS_BRANDING && currentState.showContactBookAction) {
                 actionItem {
                     id(R.drawable.ic_baseline_perm_contact_calendar_24)
                     title(host.stringProvider.getString(CommonStrings.contacts_book_title))
@@ -83,7 +86,8 @@ class UserListController @Inject constructor(
                     }
                 }
             }
-            if (currentState.showInviteActions()) {
+            //BRANDING
+            if (BuildConfig.SHOW_SHARE_ROOM_DIALOG_BRANDING && currentState.showInviteActions()) {
                 actionItem {
                     id(R.drawable.ic_qr_code_add)
                     title(host.stringProvider.getString(CommonStrings.qr_code))
@@ -165,30 +169,33 @@ class UserListController @Inject constructor(
                         }
                     }
                     is IdentityServiceError.NoIdentityServerConfigured -> {
-                        genericPillItem {
-                            id("no_IDS")
-                            imageRes(R.drawable.ic_info)
-                            text(
-                                    span {
+                        //BRANDING
+                        if (BuildConfig.SHOW_SETTINGS_IDENTITY_SERVER_BRANDING) {
+                            genericPillItem {
+                                id("no_IDS")
+                                imageRes(R.drawable.ic_info)
+                                text(
                                         span {
-                                            text = host.stringProvider.getString(CommonStrings.finish_setting_up_discovery)
-                                            textColor = host.colorProvider.getColorFromAttribute(im.vector.lib.ui.styles.R.attr.vctr_content_primary)
-                                        }
-                                        +"\n"
-                                        span {
-                                            text = host.stringProvider.getString(CommonStrings.discovery_invite)
-                                            textColor = host.colorProvider.getColorFromAttribute(im.vector.lib.ui.styles.R.attr.vctr_content_secondary)
-                                        }
-                                        +"\n"
-                                        span {
-                                            text = host.stringProvider.getString(CommonStrings.finish_setup)
-                                            textStyle = "bold"
-                                            textColor = host.colorProvider.getColorFromAttribute(com.google.android.material.R.attr.colorPrimary)
-                                        }
-                                    }.toEpoxyCharSequence()
-                            )
-                            itemClickAction {
-                                host.callback?.onSetupDiscovery()
+                                            span {
+                                                text = host.stringProvider.getString(CommonStrings.finish_setting_up_discovery)
+                                                textColor = host.colorProvider.getColorFromAttribute(im.vector.lib.ui.styles.R.attr.vctr_content_primary)
+                                            }
+                                            +"\n"
+                                            span {
+                                                text = host.stringProvider.getString(CommonStrings.discovery_invite)
+                                                textColor = host.colorProvider.getColorFromAttribute(im.vector.lib.ui.styles.R.attr.vctr_content_secondary)
+                                            }
+                                            +"\n"
+                                            span {
+                                                text = host.stringProvider.getString(CommonStrings.finish_setup)
+                                                textStyle = "bold"
+                                                textColor = host.colorProvider.getColorFromAttribute(com.google.android.material.R.attr.colorPrimary)
+                                            }
+                                        }.toEpoxyCharSequence()
+                                )
+                                itemClickAction {
+                                    host.callback?.onSetupDiscovery()
+                                }
                             }
                         }
                     }

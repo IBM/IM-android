@@ -54,7 +54,8 @@ internal class DefaultReadService @AssistedInject constructor(
         fun create(roomId: String): DefaultReadService
     }
 
-    override suspend fun markAsRead(params: ReadService.MarkAsReadParams, mainTimeLineOnly: Boolean) {
+    //BRANDING
+    override suspend fun markAsRead(params: ReadService.MarkAsReadParams, mainTimeLineOnly: Boolean, brandingSendReadMarker: Boolean?) {
         val readReceiptThreadId = if (homeServerCapabilitiesDataSource.getHomeServerCapabilities()?.canUseThreadReadReceiptsAndNotifications == true) {
             if (mainTimeLineOnly) ReadService.THREAD_ID_MAIN else null
         } else {
@@ -64,18 +65,21 @@ internal class DefaultReadService @AssistedInject constructor(
                 roomId = roomId,
                 forceReadMarker = params.forceReadMarker(),
                 forceReadReceipt = params.forceReadReceipt(),
-                readReceiptThreadId = readReceiptThreadId
+                readReceiptThreadId = readReceiptThreadId,
+                //BRANDING
+                brandingSendReadMarker = brandingSendReadMarker ?: false
         )
         setReadMarkersTask.execute(taskParams)
     }
 
-    override suspend fun setReadReceipt(eventId: String, threadId: String) = withContext(matrixCoroutineDispatchers.io) {
+    //BRANDING
+    override suspend fun setReadReceipt(eventId: String, threadId: String, brandingSendReadMarker: Boolean?) = withContext(matrixCoroutineDispatchers.io) {
         val readReceiptThreadId = if (homeServerCapabilitiesDataSource.getHomeServerCapabilities()?.canUseThreadReadReceiptsAndNotifications == true) {
             threadId
         } else {
             null
         }
-        val params = SetReadMarkersTask.Params(roomId, fullyReadEventId = null, readReceiptEventId = eventId, readReceiptThreadId = readReceiptThreadId)
+        val params = SetReadMarkersTask.Params(roomId, fullyReadEventId = null, readReceiptEventId = eventId, readReceiptThreadId = readReceiptThreadId, brandingSendReadMarker = brandingSendReadMarker ?: false)
         setReadMarkersTask.execute(params)
     }
 

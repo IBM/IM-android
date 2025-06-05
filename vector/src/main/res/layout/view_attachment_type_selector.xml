@@ -51,7 +51,8 @@
                 android:background="?android:attr/selectableItemBackground"
                 android:contentDescription="@string/attachment_type_sticker"
                 android:src="@drawable/ic_attachment_sticker"
-                app:tint="?colorPrimary" />
+                app:tint="?colorPrimary"
+                android:visibility="@integer/show_sticker_button_branding"/>
 
             <ImageButton
                 android:id="@+id/attachmentFileButton"
@@ -112,7 +113,8 @@
                 android:background="?android:attr/selectableItemBackground"
                 android:contentDescription="@string/attachment_type_contact"
                 android:src="@drawable/ic_attachment_contact_white_24dp"
-                app:tint="?colorPrimary" />
+                app:tint="?colorPrimary"
+                android:visibility="@integer/enable_phone_contact_access_branding"/>
 
         </LinearLayout>
 

@@ -8,6 +8,7 @@
 package im.vector.app.config
 
 import kotlin.time.Duration.Companion.days
+import android.os.Build
 
 /**
  * Set of flags to configure the application.
@@ -30,7 +31,8 @@ object Config {
      */
     const val ALLOW_EXTERNAL_UNIFIED_PUSH_DISTRIBUTORS = true
 
-    const val ENABLE_LOCATION_SHARING = true
+    //BRANDING
+    const val ENABLE_LOCATION_SHARING = BuildConfig.SHOW_SEND_LOCATION
     const val LOCATION_MAP_TILER_KEY = "fU3vlMsMn4Jb6dnEIFsx"
 
     /**
@@ -67,34 +69,67 @@ object Config {
      * The analytics configuration to use for the Debug build type.
      * Can be disabled by providing Analytics.Disabled
      */
-    val DEBUG_ANALYTICS_CONFIG = Analytics.Enabled(
-            postHogHost = "https://posthog.element.dev",
-            postHogApiKey = "phc_VtA1L35nw3aeAtHIx1ayrGdzGkss7k1xINeXcoIQzXN",
-            policyLink = "https://element.io/cookie-policy",
-            sentryDSN = "https://f6acc9cfc2024641b28c87ad95e73e66@sentry.tools.element.io/49",
-            sentryEnvironment = "DEBUG"
-    )
+    //BRANDING
+    val DEBUG_ANALYTICS_CONFIG = if(BuildConfig.SHOW_HELP_ELEMENT_INTRO) {
+        Analytics.Enabled(
+                postHogHost = "https://posthog.element.dev",
+                postHogApiKey = "phc_VtA1L35nw3aeAtHIx1ayrGdzGkss7k1xINeXcoIQzXN",
+                policyLink = "https://element.io/cookie-policy",
+                sentryDSN = "https://f6acc9cfc2024641b28c87ad95e73e66@sentry.tools.element.io/49",
+                sentryEnvironment = "DEBUG")
+    } else Analytics.Disabled
 
     /**
      * The analytics configuration to use for the Release build type.
      * Can be disabled by providing Analytics.Disabled
      */
-    val RELEASE_ANALYTICS_CONFIG = Analytics.Enabled(
-            postHogHost = "https://posthog.element.io",
-            postHogApiKey = "phc_Jzsm6DTm6V2705zeU5dcNvQDlonOR68XvX2sh1sEOHO",
-            policyLink = "https://element.io/cookie-policy",
-            sentryDSN = "https://f6acc9cfc2024641b28c87ad95e73e66@sentry.tools.element.io/49",
-            sentryEnvironment = "RELEASE"
-    )
+    //BRANDING
+    val RELEASE_ANALYTICS_CONFIG = if(BuildConfig.SHOW_HELP_ELEMENT_INTRO) {
+        Analytics.Enabled(
+            	postHogHost = "https://posthog.element.io",
+            	postHogApiKey = "phc_Jzsm6DTm6V2705zeU5dcNvQDlonOR68XvX2sh1sEOHO",
+            	policyLink = "https://element.io/cookie-policy",
+            	sentryDSN = "https://f6acc9cfc2024641b28c87ad95e73e66@sentry.tools.element.io/49",
+            	sentryEnvironment = "RELEASE")
+    } else Analytics.Disabled
 
     /**
      * The analytics configuration to use for the Nightly build type.
      * Can be disabled by providing Analytics.Disabled
      */
-    val NIGHTLY_ANALYTICS_CONFIG = RELEASE_ANALYTICS_CONFIG.copy(sentryEnvironment = "NIGHTLY")
-    val RELEASE_R_ANALYTICS_CONFIG = RELEASE_ANALYTICS_CONFIG.copy(sentryEnvironment = "RELEASE-R")
-    val ER_NIGHTLY_ANALYTICS_CONFIG = RELEASE_ANALYTICS_CONFIG.copy(sentryEnvironment = "element-r")
-    val ER_DEBUG_ANALYTICS_CONFIG = DEBUG_ANALYTICS_CONFIG.copy(sentryEnvironment = "element-r")
+    //BRANDING
+    val NIGHTLY_ANALYTICS_CONFIG = if(BuildConfig.SHOW_HELP_ELEMENT_INTRO) {
+        Analytics.Enabled(
+                postHogHost = "https://posthog.element.io",
+                postHogApiKey = "phc_Jzsm6DTm6V2705zeU5dcNvQDlonOR68XvX2sh1sEOHO",
+                policyLink = "https://element.io/cookie-policy",
+                sentryDSN = "https://f6acc9cfc2024641b28c87ad95e73e66@sentry.tools.element.io/49",
+                sentryEnvironment = "NIGHTLY")
+    } else Analytics.Disabled
+    val RELEASE_R_ANALYTICS_CONFIG = if(BuildConfig.SHOW_HELP_ELEMENT_INTRO) {
+        Analytics.Enabled(
+                postHogHost = "https://posthog.element.io",
+                postHogApiKey = "phc_Jzsm6DTm6V2705zeU5dcNvQDlonOR68XvX2sh1sEOHO",
+                policyLink = "https://element.io/cookie-policy",
+                sentryDSN = "https://f6acc9cfc2024641b28c87ad95e73e66@sentry.tools.element.io/49",
+                sentryEnvironment = "RELEASE-R")
+    } else Analytics.Disabled
+    val ER_NIGHTLY_ANALYTICS_CONFIG = if(BuildConfig.SHOW_HELP_ELEMENT_INTRO) {
+        Analytics.Enabled(
+                postHogHost = "https://posthog.element.io",
+                postHogApiKey = "phc_Jzsm6DTm6V2705zeU5dcNvQDlonOR68XvX2sh1sEOHO",
+                policyLink = "https://element.io/cookie-policy",
+                sentryDSN = "https://f6acc9cfc2024641b28c87ad95e73e66@sentry.tools.element.io/49",
+                sentryEnvironment = "element-r")
+    } else Analytics.Disabled
+    val ER_DEBUG_ANALYTICS_CONFIG = if(BuildConfig.SHOW_HELP_ELEMENT_INTRO) {
+        Analytics.Enabled(
+                postHogHost = "https://posthog.element.dev",
+                postHogApiKey = "phc_VtA1L35nw3aeAtHIx1ayrGdzGkss7k1xINeXcoIQzXN",
+                policyLink = "https://element.io/cookie-policy",
+                sentryDSN = "https://f6acc9cfc2024641b28c87ad95e73e66@sentry.tools.element.io/49",
+                sentryEnvironment = "element-r")
+    } else Analytics.Disabled
 
     val SHOW_UNVERIFIED_SESSIONS_ALERT_AFTER_MILLIS = 7.days.inWholeMilliseconds // 1 Week
 }

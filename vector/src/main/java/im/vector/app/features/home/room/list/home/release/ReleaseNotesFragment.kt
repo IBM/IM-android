@@ -62,7 +62,10 @@ class ReleaseNotesFragment : VectorBaseFragment<BottomSheetReleaseNotesBinding>(
             }
         })
 
-        carouselController.setData(createCarouselData())
+        //BRANDING
+        if (im.vector.app.BuildConfig.SHOW_HELP_ELEMENT_INTRO_BRANDING) {
+            carouselController.setData(createCarouselData())
+        }
 
         views.releaseNotesBtnClose.onClick { close() }
         views.releaseNotesButtonNext.onClick {

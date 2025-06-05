@@ -8,6 +8,7 @@
 package im.vector.app.features.home.room.detail.timeline.format
 
 import im.vector.app.ActiveSessionDataSource
+import im.vector.app.BuildConfig
 import im.vector.app.core.resources.StringProvider
 import im.vector.app.features.roomprofile.permissions.RoleFormatter
 import im.vector.app.features.settings.VectorPreferences
@@ -64,23 +65,24 @@ class NoticeEventFormatter @Inject constructor(
         val event = timelineEvent.root
         val senderName = timelineEvent.senderInfo.disambiguatedDisplayName
         return when (val type = event.getClearType()) {
-            EventType.STATE_ROOM_JOIN_RULES -> formatJoinRulesEvent(event, senderName, isDm)
+            EventType.STATE_ROOM_JOIN_RULES -> if(BuildConfig.SHOW_MEMBER_UPDATES_IN_ROOMS_BRANDING) { formatJoinRulesEvent(event, senderName, isDm) } else null
             EventType.STATE_ROOM_CREATE -> formatRoomCreateEvent(event, isDm)
             EventType.STATE_ROOM_NAME -> formatRoomNameEvent(event, senderName)
             EventType.STATE_ROOM_TOPIC -> formatRoomTopicEvent(event, senderName)
-            EventType.STATE_ROOM_AVATAR -> formatRoomAvatarEvent(event, senderName)
-            EventType.STATE_ROOM_MEMBER -> formatRoomMemberEvent(event, senderName, isDm)
-            EventType.STATE_ROOM_THIRD_PARTY_INVITE -> formatRoomThirdPartyInvite(event, senderName, isDm)
+            EventType.STATE_ROOM_AVATAR -> if(BuildConfig.SHOW_MEMBER_UPDATES_IN_ROOMS_BRANDING) { formatRoomAvatarEvent(event, senderName) } else null
+            EventType.STATE_ROOM_MEMBER -> if(BuildConfig.SHOW_MEMBER_UPDATES_IN_ROOMS_BRANDING) { formatRoomMemberEvent(event, senderName, isDm) } else null
+            EventType.STATE_ROOM_THIRD_PARTY_INVITE -> if(BuildConfig.SHOW_MEMBER_UPDATES_IN_ROOMS_BRANDING) { formatRoomThirdPartyInvite(event, senderName, isDm) } else null
             EventType.STATE_ROOM_ALIASES -> formatRoomAliasesEvent(event, senderName)
             EventType.STATE_ROOM_CANONICAL_ALIAS -> formatRoomCanonicalAliasEvent(event, senderName)
-            EventType.STATE_ROOM_HISTORY_VISIBILITY -> formatRoomHistoryVisibilityEvent(event, senderName, isDm)
+            EventType.STATE_ROOM_HISTORY_VISIBILITY ->
+                formatRoomHistoryVisibilityEvent(event, senderName, isDm)
             EventType.STATE_ROOM_SERVER_ACL -> formatRoomServerAclEvent(event, senderName)
             EventType.STATE_ROOM_GUEST_ACCESS -> formatRoomGuestAccessEvent(event, senderName, isDm)
             EventType.STATE_ROOM_ENCRYPTION -> formatRoomEncryptionEvent(event, senderName)
             EventType.STATE_ROOM_WIDGET,
             EventType.STATE_ROOM_WIDGET_LEGACY -> formatWidgetEvent(event, senderName)
             EventType.STATE_ROOM_TOMBSTONE -> formatRoomTombstoneEvent(event, senderName, isDm)
-            EventType.STATE_ROOM_POWER_LEVELS -> formatRoomPowerLevels(event, senderName)
+            EventType.STATE_ROOM_POWER_LEVELS -> if(BuildConfig.SHOW_MEMBER_UPDATES_IN_ROOMS_BRANDING) { formatRoomPowerLevels(event, senderName) } else null
             EventType.CALL_INVITE,
             EventType.CALL_CANDIDATES,
             EventType.CALL_HANGUP,
@@ -176,12 +178,12 @@ class NoticeEventFormatter @Inject constructor(
 
     fun format(event: Event, senderName: String?, isDm: Boolean): CharSequence? {
         return when (val type = event.getClearType()) {
-            EventType.STATE_ROOM_JOIN_RULES -> formatJoinRulesEvent(event, senderName, isDm)
-            EventType.STATE_ROOM_NAME -> formatRoomNameEvent(event, senderName)
-            EventType.STATE_ROOM_TOPIC -> formatRoomTopicEvent(event, senderName)
-            EventType.STATE_ROOM_AVATAR -> formatRoomAvatarEvent(event, senderName)
-            EventType.STATE_ROOM_MEMBER -> formatRoomMemberEvent(event, senderName, isDm)
-            EventType.STATE_ROOM_THIRD_PARTY_INVITE -> formatRoomThirdPartyInvite(event, senderName, isDm)
+            EventType.STATE_ROOM_JOIN_RULES -> if(BuildConfig.SHOW_MEMBER_UPDATES_IN_ROOMS_BRANDING) { formatJoinRulesEvent(event, senderName, isDm) } else null
+            EventType.STATE_ROOM_NAME -> if(BuildConfig.SHOW_MEMBER_UPDATES_IN_ROOMS_BRANDING) { formatRoomNameEvent(event, senderName) } else null
+            EventType.STATE_ROOM_TOPIC -> if(BuildConfig.SHOW_MEMBER_UPDATES_IN_ROOMS_BRANDING) { formatRoomTopicEvent(event, senderName) } else null
+            EventType.STATE_ROOM_AVATAR -> if(BuildConfig.SHOW_MEMBER_UPDATES_IN_ROOMS_BRANDING) { formatRoomAvatarEvent(event, senderName) } else null
+            EventType.STATE_ROOM_MEMBER -> if(BuildConfig.SHOW_MEMBER_UPDATES_IN_ROOMS_BRANDING) { formatRoomMemberEvent(event, senderName, isDm) } else null
+            EventType.STATE_ROOM_THIRD_PARTY_INVITE -> if(BuildConfig.SHOW_MEMBER_UPDATES_IN_ROOMS_BRANDING) { formatRoomThirdPartyInvite(event, senderName, isDm) } else null
             EventType.STATE_ROOM_HISTORY_VISIBILITY -> formatRoomHistoryVisibilityEvent(event, senderName, isDm)
             EventType.CALL_INVITE,
             EventType.CALL_HANGUP,

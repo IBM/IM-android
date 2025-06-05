@@ -48,7 +48,8 @@
             android:enabled="true"
             android:key="SETTINGS_ENCRYPTION_NEVER_SENT_TO_PREFERENCE_KEY"
             android:summary="@string/encryption_never_send_to_unverified_devices_summary"
-            android:title="@string/encryption_never_send_to_unverified_devices_title" />
+            android:title="@string/encryption_never_send_to_unverified_devices_title"
+            app:isPreferenceVisible="@integer/show_settings_trusted_sources_branding"/>
 
     </im.vector.app.core.preference.VectorPreferenceCategory>
 

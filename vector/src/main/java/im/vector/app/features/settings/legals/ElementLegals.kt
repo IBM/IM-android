@@ -21,8 +21,9 @@ class ElementLegals @Inject constructor(
      */
     fun getData(): List<ServerPolicy> {
         return listOf(
-                ServerPolicy(stringProvider.getString(CommonStrings.settings_copyright), VectorSettingsUrls.COPYRIGHT),
-                ServerPolicy(stringProvider.getString(CommonStrings.settings_acceptable_use_policy), VectorSettingsUrls.ACCEPTABLE_USE_POLICY),
+                //BRANDING
+                //ServerPolicy(stringProvider.getString(CommonStrings.settings_copyright), VectorSettingsUrls.COPYRIGHT),
+                //ServerPolicy(stringProvider.getString(CommonStrings.settings_acceptable_use_policy), VectorSettingsUrls.ACCEPTABLE_USE_POLICY),
                 ServerPolicy(stringProvider.getString(CommonStrings.settings_privacy_policy), VectorSettingsUrls.PRIVACY_POLICY)
         )
     }

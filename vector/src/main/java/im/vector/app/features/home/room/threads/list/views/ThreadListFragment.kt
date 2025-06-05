@@ -20,6 +20,7 @@ import com.airbnb.mvrx.withState
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import im.vector.app.R
+import im.vector.app.BuildConfig
 import im.vector.app.core.extensions.cleanup
 import im.vector.app.core.extensions.configureWith
 import im.vector.app.core.platform.VectorBaseFragment
@@ -110,7 +111,10 @@ class ThreadListFragment :
         super.onViewCreated(view, savedInstanceState)
         initToolbar()
         initTextConstants()
-        initBetaFeedback()
+        //BRANDING
+        if (BuildConfig.SHOW_SETTINGS_BUG_REPORT_BRANDING) {
+            initBetaFeedback()
+        }
 
         if (threadListViewModel.canHomeserverUseThreading()) {
             views.threadListRecyclerView.configureWith(threadListController, TimelineItemAnimator(), hasFixedSize = false)

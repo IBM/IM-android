@@ -17,7 +17,8 @@
         android:layout_marginTop="8dp"
         android:text="@string/spaces_header"
         android:textColor="?vctr_content_primary"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:visibility="@integer/show_spaces_branding"/>
 
     <TextView
         style="@style/Widget.Vector.TextView.Body"
@@ -25,6 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="@string/spaces_beta_welcome_to_spaces_desc"
-        android:textColor="?vctr_content_secondary" />
+        android:textColor="?vctr_content_secondary"
+        android:visibility="@integer/show_spaces_branding"/>
 
 </LinearLayout>
