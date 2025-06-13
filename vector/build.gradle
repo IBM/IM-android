@@ -1,0 +1,463 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-parcelize'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'com.google.devtools.ksp'
+apply plugin: 'dagger.hilt.android.plugin'
+
+if (project.hasProperty("coverage")) {
+    apply plugin: 'jacoco'
+}
+
+kapt {
+    correctErrorTypes = true
+}
+
+static def gitRevision() {
+    def cmd = "git rev-parse --short=8 HEAD"
+    return cmd.execute().text.trim()
+}
+
+project.android.buildTypes.all { buildType ->
+    buildType.javaCompileOptions.annotationProcessorOptions.arguments =
+            [
+                    validateEpoxyModelUsage: String.valueOf(buildType.name == 'debug')
+            ]
+}
+
+initScreenshotTests(project)
+
+android {
+    namespace "im.vector.app"
+    // Due to a bug introduced in Android gradle plugin 3.6.0, we have to specify the ndk version to use
+    // Ref: https://issuetracker.google.com/issues/144111441
+    ndkVersion "21.3.6528147"
+
+    compileSdk versions.compileSdk
+
+    defaultConfig {
+        // Set to API 21: see #405
+        minSdk versions.minSdk
+        targetSdk versions.targetSdk
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        // Keep abiFilter for the universalApk
+        ndk {
+            abiFilters "armeabi-v7a", "x86", 'arm64-v8a', 'x86_64'
+        }
+
+        // Generate a random app task affinity
+        manifestPlaceholders = [appTaskAffinitySuffix: "H_${gitRevision()}"]
+
+        // The following argument makes the Android Test Orchestrator run its
+        // "pm clear" command after each test invocation. This command ensures
+        // that the app's state is completely cleared between tests.
+        testInstrumentationRunnerArguments clearPackageData: 'true'
+
+        vectorDrawables.useSupportLibrary = true
+    }
+
+    testOptions {
+        // Disables animations during instrumented tests you run from the command line…
+        // This property does not affect tests that you run using Android Studio.”
+        animationsDisabled = true
+
+        // Comment to run on Android 12
+//        execution 'ANDROIDX_TEST_ORCHESTRATOR'
+    }
+    buildTypes {
+        debug {
+            if (project.hasProperty("coverage")) {
+                testCoverageEnabled = project.properties["coverage"] == "true"
+            }
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility versions.sourceCompat
+        targetCompatibility versions.targetCompat
+    }
+
+    kotlinOptions {
+        jvmTarget = versions.jvmTarget
+        freeCompilerArgs += [
+                "-opt-in=kotlin.RequiresOptIn",
+                // Fixes false positive "This is an internal Mavericks API. It is not intended for external use."
+                // of MvRx `by viewModel()` calls. Maybe due to the inlining of code... This is a temporary fix...
+                "-opt-in=com.airbnb.mvrx.InternalMavericksApi",
+                // Opt in for kotlinx.coroutines.FlowPreview too
+                "-opt-in=kotlinx.coroutines.FlowPreview",
+                // Opt in for kotlinx.coroutines.ExperimentalCoroutinesApi too
+                "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+        ]
+    }
+
+    sourceSets {
+        androidTest {
+            java.srcDirs += "src/sharedTest/java"
+        }
+        test {
+            java.srcDirs += "src/sharedTest/java"
+        }
+    }
+
+    buildFeatures {
+        viewBinding true
+        buildConfig true
+    }
+
+    packaging {
+        pickFirsts.add("META-INF/LICENSE.md")
+        pickFirsts.add("META-INF/LICENSE-notice.md")
+        pickFirsts.add("MANIFEST.MF")
+    }
+
+    //BRANDING
+    buildFeatures {
+        buildConfig true
+    }
+
+    flavorDimensions.add("brandingDimension")
+    productFlavors {
+        branding {
+            dimension "brandingDimension"
+
+            //193
+            buildConfigField "boolean", "SHOW_SETTINGS_LABOR_BRANDING", "${brandingHelper.getConfig("capabilities.show_settings_labor")}"
+
+            //197
+            buildConfigField "boolean", "SHOW_MEMBER_UPDATES_IN_ROOMS_BRANDING", "${brandingHelper.getConfig("capabilities.show_member_updates_in_rooms")}"
+
+            //208
+            if (brandingHelper.getConfig("capabilities.enable_setting_email") && brandingHelper.getConfig("capabilities.enable_setting_phone_number")) {
+                buildConfigField "boolean", "SHOW_MAIL_AND_PHONE_SETTINGS", "true"
+            } else {
+                buildConfigField "boolean", "SHOW_MAIL_AND_PHONE_SETTINGS", "false"
+            }
+
+            //238
+            buildConfigField "boolean", "ENABLE_VOIP_BRANDING", "${brandingHelper.getConfig("capabilities.enable_voip")}"
+
+            //243
+            buildConfigField "boolean", "ENABLE_INTEGRATIONS_BRANDING", "${brandingHelper.getConfig("capabilities.enable_integrations")}"
+
+            //privacy_url
+            buildConfigField "String", "PRIVACY_URL_BRANDING", "\"${brandingHelper.getConfig("settings.privacy_url")}\""
+
+            //help_url
+            buildConfigField "String", "HELP_URL_BRANDING", "\"${brandingHelper.getConfig("settings.help_url")}\""
+
+            //
+            buildConfigField "Boolean", "ENABLE_PHONE_CONTACT_ACCESS_BRANDING", "${brandingHelper.getConfig("capabilities.enable_phone_contact_access")}"
+
+            //223
+            buildConfigField "Boolean", "SHOW_SETTINGS_BUG_REPORT_BRANDING", "${brandingHelper.getConfig("capabilities.show_settings_bug_report")}"
+
+            //229
+            buildConfigField "Boolean", "SHOW_SHARE_ROOM_DIALOG_BRANDING", "${brandingHelper.getConfig("capabilities.show_share_room_dialog")}"
+
+            //254
+            buildConfigField "Boolean", "SHOW_HELP_ELEMENT_INTRO_BRANDING", "${brandingHelper.getConfig("capabilities.show_help_element_intro")}"
+
+            //212
+            buildConfigField "Boolean", "SHOW_SETTINGS_IDENTITY_SERVER_BRANDING", "${brandingHelper.getConfig("capabilities.show_settings_identity_server")}"
+
+            //259
+            buildConfigField "Boolean", "SHOW_SETTINGS_TRUSTED_SOURCES_BRANDING", "${brandingHelper.getConfig("capabilities.show_settings_trusted_sources")}"
+
+            //263
+            buildConfigField "Boolean", "SHOW_SPACES_BRANDING", "${brandingHelper.getConfig("capabilities.show_spaces")}"
+            buildConfigField "Boolean", "SHOW_EXTENDED_ROOM_CONFIG_BRANDING", "${brandingHelper.getConfig("capabilities.show_extended_room_config")}"
+
+            //352
+            buildConfigField "Boolean", "ENABLE_CMD_TEXTEFFECTS_BRANDING", "${brandingHelper.getConfig("capabilities.enable_cmd_textEffects")}"
+
+            //353
+            buildConfigField "Boolean", "ENABLE_CMD_SELFNICKAVATAR_BRANDING", "${brandingHelper.getConfig("capabilities.enable_cmd_selfNickAvatar")}"
+
+            //354
+            buildConfigField "Boolean", "ENABLE_CMD_ROOMRPROPS_BRANDING", "${brandingHelper.getConfig("capabilities.enable_cmd_roomProps")}"
+
+            //355
+            buildConfigField "Boolean", "ENABLE_CMD_USERMGMT_BRANDING", "${brandingHelper.getConfig("capabilities.enable_cmd_userMgmt")}"
+
+            //356
+            buildConfigField "Boolean", "ENABLE_CMD_JOINLEAVE_BRANDING", "${brandingHelper.getConfig("capabilities.enable_cmd_joinLeave")}"
+
+            //357
+            buildConfigField "Boolean", "ENABLE_CMD_IGNORE_BRANDING", "${brandingHelper.getConfig("capabilities.enable_cmd_ignore")}"
+
+            //358
+            buildConfigField "Boolean", "ENABLE_CMD_SHORTCUTS_BRANDING", "${brandingHelper.getConfig("capabilities.enable_cmd_shortcuts")}"
+
+            //359
+            buildConfigField "Boolean", "ENABLE_CMD_UPGRADEROOM_BRANDING", "${brandingHelper.getConfig("capabilities.enable_cmd_upgradeRoom")}"
+
+            //360
+            buildConfigField "Boolean", "ENABLE_CMD_BAN_BRANDING", "${brandingHelper.getConfig("capabilities.enable_cmd_ban")}"
+
+            //361
+            buildConfigField "Boolean", "ENABLE_CMD_VERIFY_BRANDING", "${brandingHelper.getConfig("capabilities.enable_cmd_verify")}"
+
+            //362
+            buildConfigField "Boolean", "ENABLE_CMD_HELP_BRANDING", "${brandingHelper.getConfig("capabilities.enable_cmd_help")}"
+
+            //363
+            buildConfigField "Boolean", "ENABLE_CMD_CONVERTROOMS_BRANDING", "${brandingHelper.getConfig("capabilities.enable_cmd_convertRooms")}"
+
+            //363
+            buildConfigField "Boolean", "ENABLE_CMD_CONVERTROOMS_BRANDING", "${brandingHelper.getConfig("capabilities.enable_cmd_convertRooms")}"
+
+            //344
+            buildConfigField "Boolean", "ENABLE_CMD_DEVTOOLS_BRANDING", "${brandingHelper.getConfig("capabilities.enable_cmd_devtools")}"
+
+            //377
+            buildConfigField "Boolean", "ENABLE_VOICE_BROADCAST_BRANDING", "${brandingHelper.getConfig("capabilities.enable_voice_broadcasts")}"
+
+            //490
+            buildConfigField "Boolean", "SHOW_EXPLICIT_ROOMS_BRANDING", "${brandingHelper.getConfig("capabilities.show_explicit_rooms")}"
+
+            //500
+            buildConfigField "Boolean", "ENABLE_NEW_SESSION_MANAGER_VIEW_BRANDING", "true"
+
+            //604
+            buildConfigField "Boolean", "ENABLE_POLLS_BRANDING", "${brandingHelper.getConfig("capabilities.enable_polls")}"
+
+            //609
+            buildConfigField "Boolean", "ENABLE_RICH_TEXT_EDITOR_BRANDING", "${brandingHelper.getConfig("capabilities.enable_rich_text_editor")}"
+
+            //867
+            buildConfigField "Boolean", "ENABLE_READING_CONFIRMATION_BRANDING", "${brandingHelper.getConfig("capabilities.enable_reading_confirmation")}"
+
+            //997
+            buildConfigField "Boolean", "SHOW_USER_DEACTIVATION", "${brandingHelper.getConfig("capabilities.show_user_deactivation")}"
+
+            //999 [POC]
+            buildConfigField "Boolean", "ENABLE_CONTENT_CAPTURE_BRANDING", "${brandingHelper.getConfig("capabilities.android.enable_content_capture")}"
+        }
+    }
+}
+
+dependencies {
+
+    implementation project(":vector-config")
+    api project(":matrix-sdk-android")
+    implementation project(":matrix-sdk-android-flow")
+    implementation project(":library:external:jsonviewer")
+    implementation project(":library:external:diff-match-patch")
+    implementation project(":library:external:textdrawable")
+    implementation project(":library:external:autocomplete")
+    implementation project(":library:ui-strings")
+    implementation project(":library:ui-styles")
+    implementation project(":library:core-utils")
+    implementation project(":library:attachment-viewer")
+    implementation project(":library:multipicker")
+
+    implementation libs.jetbrains.coroutinesCore
+    implementation libs.jetbrains.coroutinesAndroid
+
+    implementation libs.androidx.recyclerview
+    implementation libs.androidx.appCompat
+    implementation libs.androidx.fragmentKtx
+    implementation libs.androidx.constraintLayout
+    implementation libs.androidx.core
+    implementation "androidx.media:media:1.6.0"
+    implementation "androidx.transition:transition:1.4.1"
+    implementation libs.androidx.biometric
+
+    api "org.threeten:threetenbp:1.4.0:no-tzdb"
+    api "com.gabrielittner.threetenbp:lazythreetenbp:0.16.0"
+
+    implementation libs.squareup.moshi
+    kapt libs.squareup.moshiKotlin
+
+    // Lifecycle
+    implementation libs.androidx.lifecycleLivedata
+    api libs.androidx.lifecycleProcess
+    implementation libs.androidx.lifecycleRuntimeKtx
+
+    api libs.androidx.datastorepreferences
+
+    // Opus Encoder
+    implementation libs.element.opusencoder
+
+    // WYSIWYG Editor
+    implementation libs.element.wysiwyg
+
+    // Log
+    api libs.jakewharton.timber
+
+    // Debug
+    api 'com.facebook.stetho:stetho:1.6.0'
+
+    // Analytics
+    api 'com.github.matrix-org:matrix-analytics-events:0.23.0'
+
+    api libs.google.phonenumber
+
+    // FlowBinding
+    implementation libs.github.flowBinding
+    implementation libs.github.flowBindingAppcompat
+
+    api libs.airbnb.epoxy
+    implementation libs.airbnb.epoxyGlide
+    ksp libs.airbnb.epoxyProcessor
+    implementation libs.airbnb.epoxyPaging
+    api libs.airbnb.mavericks
+
+    // Snap Helper https://github.com/rubensousa/GravitySnapHelper
+    api 'com.github.rubensousa:gravitysnaphelper:2.2.2'
+
+    // Work
+    api libs.androidx.work
+
+    // Paging
+    implementation libs.androidx.pagingRuntimeKtx
+
+    // Pref
+    api libs.androidx.preferenceKtx
+
+    // UI
+    implementation libs.google.material
+    implementation project(":library:external:span")
+    implementation libs.markwon.core
+    implementation libs.markwon.extLatex
+    implementation libs.markwon.imageGlide
+    implementation libs.markwon.inlineParser
+    implementation libs.markwon.html
+    implementation 'com.googlecode.htmlcompressor:htmlcompressor:1.5.2'
+    implementation 'me.saket:better-link-movement-method:2.2.0'
+    implementation 'com.google.android.flexbox:flexbox:3.0.0'
+    implementation libs.androidx.autoFill
+    implementation 'jp.wasabeef:glide-transformations:4.3.0'
+    implementation 'com.github.hyuwah:DraggableView:1.0.0'
+
+    // Custom Tab
+    implementation 'androidx.browser:browser:1.5.0'
+
+    // Passphrase strength helper
+    implementation 'com.nulab-inc:zxcvbn:1.7.0'
+
+    // Alerter
+    implementation 'com.github.tapadoo:alerter:7.2.4'
+
+    // Shake detection
+    implementation 'com.squareup:seismic:1.0.3'
+
+    // Image Loading
+    implementation libs.github.bigImageViewer
+    implementation libs.github.glideImageLoader
+    implementation libs.github.glideImageViewFactory
+
+    // implementation 'com.github.MikeOrtiz:TouchImageView:3.0.2'
+    implementation 'com.github.chrisbanes:PhotoView:2.3.0'
+
+    implementation libs.github.glide
+    kapt libs.github.glideCompiler
+    implementation 'com.github.yalantis:ucrop:2.2.8'
+
+    // Chat effects
+    implementation 'nl.dionsegijn:konfetti-xml:2.0.2'
+
+    implementation 'com.github.jetradarmobile:android-snowfall:1.2.1'
+    // DI
+    implementation libs.dagger.hilt
+    kapt libs.dagger.hiltCompiler
+
+    // Analytics
+    implementation 'com.posthog:posthog-android:3.2.0'
+    implementation libs.sentry.sentryAndroid
+
+    // UnifiedPush
+    implementation 'com.github.UnifiedPush:android-connector:2.1.1'
+
+    implementation "androidx.emoji2:emoji2:1.3.0"
+
+    // Jitsi
+    api('org.jitsi.react:jitsi-meet-sdk:10.2.0') {
+        exclude group: 'com.google.firebase'
+        exclude group: 'com.google.android.gms'
+        exclude group: 'com.android.installreferrer'
+
+        // Exclude jitsi's android-scalablevideoview fork's support library
+        // The library exports a jetified artifact but doesn't remove the support library dependency
+        // https://github.com/MatrixFrog/Android-ScalableVideoView/blob/master/gradle.properties#L1
+        exclude group: 'com.android.support', module: 'appcompat-v7'
+
+        // transitive needed to pull in the react-native dependency
+        transitive = true
+    }
+
+    // QR-code
+    // Stick to 3.3.3 because of https://github.com/zxing/zxing/issues/1170
+    implementation 'com.google.zxing:core:3.3.3'
+
+    implementation project(":library:external:barcodescanner:zxing")
+
+    // Emoji Keyboard
+    api libs.vanniktech.emojiMaterial
+    api libs.vanniktech.emojiGoogle
+
+    implementation project(":library:external:dialpad")
+
+    // JWT
+    api libs.jsonwebtoken.jjwtApi
+    runtimeOnly libs.jsonwebtoken.jjwtImpl
+    runtimeOnly(libs.jsonwebtoken.jjwtOrgjson) {
+        exclude group: 'org.json', module: 'json' //provided by Android natively
+    }
+    testImplementation(libs.jsonwebtoken.jjwtOrgjson)
+    implementation 'commons-codec:commons-codec:1.15'
+
+    // MapTiler
+    api(libs.maplibre.androidSdk) {
+        exclude group: 'com.google.android.gms', module: 'play-services-location'
+    }
+    api(libs.maplibre.pluginAnnotation) {
+        exclude group: 'com.google.android.gms', module: 'play-services-location'
+    }
+
+    // TESTS
+    testImplementation libs.tests.junit
+    testImplementation libs.tests.kluent
+    testImplementation libs.mockk.mockk
+    testImplementation libs.androidx.coreTesting
+    testImplementation libs.tests.robolectric
+    // Plant Timber tree for test
+    testImplementation libs.tests.timberJunitRule
+    testImplementation libs.airbnb.mavericksTesting
+    testImplementation libs.androidx.coreTesting
+    testImplementation(libs.jetbrains.coroutinesTest) {
+        exclude group: "org.jetbrains.kotlinx", module: "kotlinx-coroutines-debug"
+    }
+
+    // Fix issue with Jitsi. Inspired from https://github.com/android/android-test/issues/861#issuecomment-872067868
+    // Error was lots of `Duplicate class org.checkerframework.common.reflection.qual.MethodVal found in modules jetified-checker-3.1 (org.checkerframework:checker:3.1.1) and jetified-checker-qual-3.12.0 (org.checkerframework:checker-qual:3.12.0)
+    //noinspection GradleDependency Cannot use latest 3.15.0 since it required min API 26.
+    implementation "org.checkerframework:checker:3.35.0"
+
+    androidTestImplementation libs.androidx.testCore
+    androidTestImplementation libs.androidx.testRunner
+    androidTestImplementation libs.androidx.testRules
+    androidTestImplementation libs.androidx.junit
+    androidTestImplementation libs.androidx.espressoCore
+    androidTestImplementation libs.androidx.espressoContrib
+    androidTestImplementation libs.androidx.espressoIntents
+    androidTestImplementation libs.tests.kluent
+    androidTestImplementation libs.androidx.coreTesting
+    androidTestImplementation(libs.jetbrains.coroutinesTest) {
+        exclude group: "org.jetbrains.kotlinx", module: "kotlinx-coroutines-debug"
+    }
+    // Plant Timber tree for test
+    androidTestImplementation libs.tests.timberJunitRule
+    // "The one who serves a great Espresso"
+    androidTestImplementation('com.adevinta.android:barista:4.3.0') {
+        exclude group: 'org.jetbrains.kotlin'
+    }
+    androidTestImplementation libs.mockk.mockkAndroid
+    androidTestUtil libs.androidx.orchestrator
+    debugImplementation libs.androidx.fragmentTestingManifest
+    androidTestImplementation libs.androidx.fragmentTesting
+    androidTestImplementation "org.jetbrains.kotlin:kotlin-reflect:1.8.21"
+}

@@ -1,0 +1,40 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+}
+
+android {
+    namespace "im.vector.app.config"
+
+    compileSdk versions.compileSdk
+
+    defaultConfig {
+        minSdk versions.minSdk
+        targetSdk versions.targetSdk
+    }
+    compileOptions {
+        sourceCompatibility versions.sourceCompat
+        targetCompatibility versions.targetCompat
+    }
+
+    kotlinOptions {
+        jvmTarget = versions.jvmTarget
+    }
+    
+    buildFeatures {
+        buildConfig true
+    }
+
+    flavorDimensions.add("brandingDimension")
+    productFlavors {
+        branding {
+            dimension "brandingDimension"
+
+            //254
+            buildConfigField "boolean", "SHOW_HELP_ELEMENT_INTRO", "${brandingHelper.getConfig("capabilities.show_help_element_intro")}"
+
+            //346
+            buildConfigField "boolean", "SHOW_SEND_LOCATION", "${brandingHelper.getConfig("capabilities.show_send_location")}"
+        }
+    }
+}
