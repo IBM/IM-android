@@ -1,8 +1,8 @@
 /*
  * Copyright 2018-2024 New Vector Ltd.
  *
- * SPDX-License-Identifier: AGPL-3.0-only
- * Please see LICENSE in the repository root for full details.
+ * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial
+ * Please see LICENSE files in the repository root for full details.
  */
 package im.vector.app.features.settings
 
@@ -980,8 +980,12 @@ class VectorPreferences @Inject constructor(
     /**
      * The user does not allow screenshots of the application.
      */
+    //BRANDING
     fun useFlagSecure(): Boolean {
-        return defaultPrefs.getBoolean(SETTINGS_SECURITY_USE_FLAG_SECURE, false)
+        if (im.vector.app.BuildConfig.ENABLE_MEDIA_SCREENSHOT_BRANDING) {
+            return defaultPrefs.getBoolean(SETTINGS_SECURITY_USE_FLAG_SECURE, true)
+        }
+        return true
     }
 
     /** Whether the keyboard should disable personalized learning. */

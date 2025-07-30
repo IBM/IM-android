@@ -83,7 +83,7 @@
         app:srcCompat="@drawable/ic_material_save"
         app:tint="?colorOnPrimary"
         tools:ignore="MissingPrefix"
-        android:visibility="@integer/enable_content_capture_branding" />
+        android:visibility="@integer/show_media_download_branding" />
 
     <ImageView
         android:id="@+id/overlayShareButton"

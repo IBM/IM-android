@@ -37,7 +37,8 @@
             app:actionTitle="@string/attachment_type_selector_file"
             app:leftIcon="@drawable/ic_attachment_file"
             app:tint="?colorPrimary"
-            app:titleTextColor="?vctr_content_primary" />
+            app:titleTextColor="?vctr_content_primary"
+            android:visibility="@integer/show_media_download_branding" />
 
         <im.vector.app.core.ui.views.BottomSheetActionButton
             android:id="@+id/voiceBroadcast"
