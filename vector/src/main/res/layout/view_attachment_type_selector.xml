@@ -62,7 +62,8 @@
                 android:background="?android:attr/selectableItemBackground"
                 android:contentDescription="@string/attachment_type_file"
                 android:src="@drawable/ic_attachment_file"
-                app:tint="?colorPrimary" />
+                app:tint="?colorPrimary"
+                android:visibility="@integer/show_media_download_branding" />
 
             <ImageButton
                 android:id="@+id/attachmentVoiceBroadcast"

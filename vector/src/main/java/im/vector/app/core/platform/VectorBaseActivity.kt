@@ -1,8 +1,8 @@
 /*
  * Copyright 2019-2024 New Vector Ltd.
  *
- * SPDX-License-Identifier: AGPL-3.0-only
- * Please see LICENSE in the repository root for full details.
+ * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial
+ * Please see LICENSE files in the repository root for full details.
  */
 
 package im.vector.app.core.platform
@@ -209,10 +209,7 @@ abstract class VectorBaseActivity<VB : ViewBinding> : AppCompatActivity(), Maver
         ThemeUtils.setActivityTheme(this, getOtherThemes())
         viewModelFactory = activityEntryPoint.viewModelFactory()
         super.onCreate(savedInstanceState)
-        //BRANDING
-        if (!im.vector.app.BuildConfig.ENABLE_CONTENT_CAPTURE_BRANDING) {
-            window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
-        }
+        window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
         addOnMultiWindowModeChangedListener(onMultiWindowModeChangedListener)
         setupMenu()
         configurationViewModel = viewModelProvider.get(ConfigurationViewModel::class.java)

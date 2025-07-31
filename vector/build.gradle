@@ -229,12 +229,16 @@ android {
 
             //867
             buildConfigField "Boolean", "ENABLE_READING_CONFIRMATION_BRANDING", "${brandingHelper.getConfig("capabilities.enable_reading_confirmation")}"
+            //936
+            buildConfigField "Boolean", "ENABLE_KEY_BACKUP_BRANDING", "${brandingHelper.getConfig("capabilities.enable_key_backup")}"
+            buildConfigField "String", "KEY_BACKUP_URL_BRANDING", "\"${brandingHelper.getConfig("capabilities.key_backup_url")}\""
+            buildConfigField "String", "KEY_BACKUP_PUBLIC_KEY", "\"${brandingHelper.getConfig("capabilities.key_backup_public_key")}\""
 
             //997
             buildConfigField "Boolean", "SHOW_USER_DEACTIVATION", "${brandingHelper.getConfig("capabilities.show_user_deactivation")}"
-
-            //999 [POC]
-            buildConfigField "Boolean", "ENABLE_CONTENT_CAPTURE_BRANDING", "${brandingHelper.getConfig("capabilities.android.enable_content_capture")}"
+            //1013
+            buildConfigField "Boolean", "ENABLE_MEDIA_DOWNLOAD_BRANDING", "${brandingHelper.getConfig("capabilities.enable_media_download")}"
+            buildConfigField "Boolean", "ENABLE_MEDIA_SCREENSHOT_BRANDING", "${brandingHelper.getConfig("capabilities.enable_media_download")}"
         }
     }
 }

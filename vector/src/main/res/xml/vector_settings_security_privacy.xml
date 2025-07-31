@@ -149,10 +149,11 @@
             android:title="@string/settings_security_incognito_keyboard_title" />
 
         <im.vector.app.core.preference.VectorSwitchPreference
-            android:defaultValue="false"
+            android:defaultValue="@bool/enable_media_screenshot_branding"
             android:key="SETTINGS_SECURITY_USE_FLAG_SECURE"
             android:summary="@string/settings_security_prevent_screenshots_summary"
-            android:title="@string/settings_security_prevent_screenshots_title" />
+            android:title="@string/settings_security_prevent_screenshots_title"
+            app:isPreferenceVisible="@integer/show_media_screenshot_branding" />
 
     </im.vector.app.core.preference.VectorPreferenceCategory>
 

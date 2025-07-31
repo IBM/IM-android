@@ -12,7 +12,7 @@ class BrandingHelper {
     private FileConfig brandingConfig = null
 
     void init(String rootDir) {
-        def tomlFile = new File("${rootDir}/../branding/branding.toml")
+        def tomlFile = new File("${rootDir}/branding/branding.toml")
         println("Reading TOML file ${tomlFile.toString()}")
         if (!tomlFile.exists()) {
             throw new GradleException("TOML file does not exist at " + tomlFile.toString())
@@ -28,7 +28,7 @@ class BrandingHelper {
     }
 
     private void copyGoogleServicesJson(String rootDir) {
-        File source = new File("${rootDir}/../branding/res/android/custom/google-services.json")
+        File source = new File("${rootDir}/branding/res/android/custom/google-services.json")
         File target1 = new File("${rootDir}/vector-app/src/gplay/debug/google-services.json")
         File target2 = new File("${rootDir}/vector-app/src/gplay/release/google-services.json")
         println("Copy the google-services.json ${source.toString()} ...")
@@ -40,15 +40,15 @@ class BrandingHelper {
     }
 
     private void copyResourceFiles(String rootDir) {
-        File source1 = new File("${rootDir}/../branding/res/android/custom/library")
+        File source1 = new File("${rootDir}/branding/res/android/custom/library")
         println("Copy the content of the folder ${source1.toString()} ...")
         copyDirectory(source1.toPath(), "${rootDir}/library")
 
-        File source2 = new File("${rootDir}/../branding/res/android/custom/vector")
+        File source2 = new File("${rootDir}/branding/res/android/custom/vector")
         println("Copy the content of the folder ${source2.toString()} ...")
         copyDirectory(source2.toPath(), "${rootDir}/vector")
 
-        File source3 = new File("${rootDir}/../branding/res/android/custom/vector-app")
+        File source3 = new File("${rootDir}/branding/res/android/custom/vector-app")
         println("Copy the content of the folder ${source3.toString()} ...")
         copyDirectory(source3.toPath(), "${rootDir}/vector-app")
     }
@@ -328,7 +328,7 @@ apply plugin: 'org.sonarqube'
 sonar {
     properties {
         property "sonar.projectName", "element-android"
-        property "sonar.projectKey", "vector-im_element-android"
+        property "sonar.projectKey", "element-android"
         property "sonar.host.url", "https://sonarcloud.io"
         property "sonar.projectVersion", project(":vector").android.defaultConfig.versionName
         property "sonar.sourceEncoding", "UTF-8"
@@ -336,7 +336,7 @@ sonar {
         property "sonar.links.ci", "https://github.com/element-hq/element-android/actions"
         property "sonar.links.scm", "https://github.com/element-hq/element-android/"
         property "sonar.links.issue", "https://github.com/element-hq/element-android/issues"
-        property "sonar.organization", "new_vector_ltd_organization"
+        property "sonar.organization", "element-hq"
         property "sonar.java.coveragePlugin", "jacoco"
         property "sonar.coverage.jacoco.xmlReportPaths", "${project.buildDir}/reports/jacoco/generateCoverageReport/generateCoverageReport.xml"
         property "sonar.login", project.hasProperty("SONAR_LOGIN") ? SONAR_LOGIN : "invalid"
